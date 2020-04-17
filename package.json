@@ -1,6 +1,6 @@
 {
   "name": "@angular/youtube-player",
-  "version": "9.2.1-sha-5d25d1b23",
+  "version": "9.2.1-sha-447f2e6af",
   "description": "Angular YouTube Player",
   "main": "./bundles/youtube-player.umd.js",
   "fesm5": "./fesm5/youtube-player.js",
