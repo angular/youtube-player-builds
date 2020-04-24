@@ -223,6 +223,9 @@
          */
         platformId) {
             this._ngZone = _ngZone;
+            this._youtubeContainer = new rxjs.Subject();
+            this._destroyed = new rxjs.Subject();
+            this._playerChanges = new rxjs.BehaviorSubject(undefined);
             this._videoId = new rxjs.BehaviorSubject(undefined);
             this._height = new rxjs.BehaviorSubject(DEFAULT_PLAYER_HEIGHT);
             this._width = new rxjs.BehaviorSubject(DEFAULT_PLAYER_WIDTH);
@@ -230,14 +233,12 @@
             this._endSeconds = new rxjs.BehaviorSubject(undefined);
             this._suggestedQuality = new rxjs.BehaviorSubject(undefined);
             /** Outputs are direct proxies from the player itself. */
-            this.ready = new core.EventEmitter();
-            this.stateChange = new core.EventEmitter();
-            this.error = new core.EventEmitter();
-            this.apiChange = new core.EventEmitter();
-            this.playbackQualityChange = new core.EventEmitter();
-            this.playbackRateChange = new core.EventEmitter();
-            this._youtubeContainer = new rxjs.Subject();
-            this._destroyed = new rxjs.Subject();
+            this.ready = this._getLazyEmitter('onReady');
+            this.stateChange = this._getLazyEmitter('onStateChange');
+            this.error = this._getLazyEmitter('onError');
+            this.apiChange = this._getLazyEmitter('onApiChange');
+            this.playbackQualityChange = this._getLazyEmitter('onPlaybackQualityChange');
+            this.playbackRateChange = this._getLazyEmitter('onPlaybackRateChange');
             // @breaking-change 10.0.0 Remove null check for `platformId`.
             this._isBrowser =
                 platformId ? common.isPlatformBrowser(platformId) : typeof window === 'object' && !!window;
@@ -317,7 +318,7 @@
                 iframeApiAvailableObs = iframeApiAvailableSubject_1.pipe(operators.take(1), operators.startWith(false));
             }
             // An observable of the currently loaded player.
-            var playerObs = createPlayerObservable(this._youtubeContainer, this._videoId, iframeApiAvailableObs, this._width, this._height, this.createEventsBoundInZone(), this._ngZone).pipe(waitUntilReady(function (player) {
+            var playerObs = createPlayerObservable(this._youtubeContainer, this._videoId, iframeApiAvailableObs, this._width, this._height, this._ngZone).pipe(waitUntilReady(function (player) {
                 // Destroy the player if loading was aborted so that we don't end up leaking memory.
                 if (!playerIsReady(player)) {
                     player.destroy();
@@ -326,6 +327,7 @@
             // Set up side effects to bind inputs to the player.
             playerObs.subscribe(function (player) {
                 _this._player = player;
+                _this._playerChanges.next(player);
                 if (player && _this._pendingPlayerState) {
                     _this._initializePlayer(player, _this._pendingPlayerState);
                 }
@@ -337,24 +339,12 @@
             // After all of the subscriptions are set up, connect the observable.
             playerObs.connect();
         };
+        /**
+         * @deprecated No longer being used. To be removed.
+         * @breaking-change 11.0.0
+         */
         YouTubePlayer.prototype.createEventsBoundInZone = function () {
-            var _this = this;
-            var output = {};
-            var events = new Map([
-                ['onReady', this.ready],
-                ['onStateChange', this.stateChange],
-                ['onPlaybackQualityChange', this.playbackQualityChange],
-                ['onPlaybackRateChange', this.playbackRateChange],
-                ['onError', this.error],
-                ['onApiChange', this.apiChange]
-            ]);
-            events.forEach(function (emitter, name) {
-                // Since these events all trigger change detection, only bind them if something is subscribed.
-                if (emitter.observers.length) {
-                    output[name] = _this._runInZone(function (event) { return emitter.emit(event); });
-                }
-            });
-            return output;
+            return {};
         };
         YouTubePlayer.prototype.ngAfterViewInit = function () {
             this._youtubeContainer.next(this.youtubeContainer.nativeElement);
@@ -364,6 +354,7 @@
                 this._player.destroy();
                 window.onYouTubeIframeAPIReady = this._existingApiReadyCallback;
             }
+            this._playerChanges.complete();
             this._videoId.complete();
             this._height.complete();
             this._width.complete();
@@ -374,17 +365,6 @@
             this._destroyed.next();
             this._destroyed.complete();
         };
-        YouTubePlayer.prototype._runInZone = function (callback) {
-            var _this = this;
-            return function () {
-                var args = [];
-                for (var _i = 0; _i < arguments.length; _i++) {
-                    args[_i] = arguments[_i];
-                }
-                return _this._ngZone.run(function () { return callback.apply(void 0, __spread(args)); });
-            };
-        };
-        /** Proxied methods. */
         /** See https://developers.google.com/youtube/iframe_api_reference#playVideo */
         YouTubePlayer.prototype.playVideo = function () {
             if (this._player) {
@@ -573,6 +553,37 @@
                 player.seekTo(seek.seconds, seek.allowSeekAhead);
             }
         };
+        /** Gets an observable that adds an event listener to the player when a user subscribes to it. */
+        YouTubePlayer.prototype._getLazyEmitter = function (name) {
+            var _this = this;
+            // Start with the stream of players. This way the events will be transferred
+            // over to the new player if it gets swapped out under-the-hood.
+            return this._playerChanges.pipe(
+            // Switch to the bound event. `switchMap` ensures that the old event is removed when the
+            // player is changed. If there's no player, return an observable that never emits.
+            operators.switchMap(function (player) {
+                return player ? rxjs.fromEventPattern(function (listener) {
+                    player.addEventListener(name, listener);
+                }, function (listener) {
+                    // The API seems to throw when we try to unbind from a destroyed player and it doesn't
+                    // expose whether the player has been destroyed so we have to wrap it in a try/catch to
+                    // prevent the entire stream from erroring out.
+                    try {
+                        player.removeEventListener(name, listener);
+                    }
+                    catch (_a) { }
+                }) : rxjs.of();
+            }), 
+            // By default we run all the API interactions outside the zone
+            // so we have to bring the events back in manually when they emit.
+            function (source) { return new rxjs.Observable(function (observer) { return source.subscribe({
+                next: function (value) { return _this._ngZone.run(function () { return observer.next(value); }); },
+                error: function (error) { return observer.error(error); },
+                complete: function () { return observer.complete(); }
+            }); }); }, 
+            // Ensures that everything is cleared out on destroy.
+            operators.takeUntil(this._destroyed));
+        };
         YouTubePlayer.decorators = [
             { type: core.Component, args: [{
                         selector: 'youtube-player',
@@ -660,11 +671,11 @@
         });
     }
     /** Create an observable for the player based on the given options. */
-    function createPlayerObservable(youtubeContainer, videoIdObs, iframeApiAvailableObs, widthObs, heightObs, events, ngZone) {
+    function createPlayerObservable(youtubeContainer, videoIdObs, iframeApiAvailableObs, widthObs, heightObs, ngZone) {
         var playerOptions = videoIdObs
             .pipe(operators.withLatestFrom(rxjs.combineLatest([widthObs, heightObs])), operators.map(function (_a) {
             var _b = __read(_a, 2), videoId = _b[0], _c = __read(_b[1], 2), width = _c[0], height = _c[1];
-            return videoId ? ({ videoId: videoId, width: width, height: height, events: events }) : undefined;
+            return videoId ? ({ videoId: videoId, width: width, height: height }) : undefined;
         }));
         return rxjs.combineLatest([youtubeContainer, playerOptions, rxjs.of(ngZone)])
             .pipe(skipUntilRememberLatest(iframeApiAvailableObs), operators.scan(syncPlayerState, undefined), operators.distinctUntilChanged());
