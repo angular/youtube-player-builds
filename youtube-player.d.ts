@@ -6,7 +6,8 @@
  * found in the LICENSE file at https://angular.io/license
  */
 /// <reference types="youtube" />
-import { AfterViewInit, ElementRef, EventEmitter, NgZone, OnDestroy, OnInit } from '@angular/core';
+import { AfterViewInit, ElementRef, NgZone, OnDestroy, OnInit } from '@angular/core';
+import { Observable } from 'rxjs';
 declare global {
     interface Window {
         YT: typeof YT | undefined;
@@ -22,6 +23,14 @@ export declare const DEFAULT_PLAYER_HEIGHT = 390;
  */
 export declare class YouTubePlayer implements AfterViewInit, OnDestroy, OnInit {
     private _ngZone;
+    /** Whether we're currently rendering inside a browser. */
+    private _isBrowser;
+    private _youtubeContainer;
+    private _destroyed;
+    private _player;
+    private _existingApiReadyCallback;
+    private _pendingPlayerState;
+    private _playerChanges;
     /** YouTube Video ID to view */
     get videoId(): string | undefined;
     set videoId(videoId: string | undefined);
@@ -50,21 +59,14 @@ export declare class YouTubePlayer implements AfterViewInit, OnDestroy, OnInit {
      */
     showBeforeIframeApiLoads: boolean | undefined;
     /** Outputs are direct proxies from the player itself. */
-    ready: EventEmitter<YT.PlayerEvent>;
-    stateChange: EventEmitter<YT.OnStateChangeEvent>;
-    error: EventEmitter<YT.OnErrorEvent>;
-    apiChange: EventEmitter<YT.PlayerEvent>;
-    playbackQualityChange: EventEmitter<YT.OnPlaybackQualityChangeEvent>;
-    playbackRateChange: EventEmitter<YT.OnPlaybackRateChangeEvent>;
+    ready: Observable<YT.PlayerEvent>;
+    stateChange: Observable<YT.OnStateChangeEvent>;
+    error: Observable<YT.OnErrorEvent>;
+    apiChange: Observable<YT.PlayerEvent>;
+    playbackQualityChange: Observable<YT.OnPlaybackQualityChangeEvent>;
+    playbackRateChange: Observable<YT.OnPlaybackRateChangeEvent>;
     /** The element that will be replaced by the iframe. */
     youtubeContainer: ElementRef<HTMLElement>;
-    /** Whether we're currently rendering inside a browser. */
-    private _isBrowser;
-    private _youtubeContainer;
-    private _destroyed;
-    private _player;
-    private _existingApiReadyCallback;
-    private _pendingPlayerState;
     constructor(_ngZone: NgZone, 
     /**
      * @deprecated `platformId` parameter to become required.
@@ -72,11 +74,13 @@ export declare class YouTubePlayer implements AfterViewInit, OnDestroy, OnInit {
      */
     platformId?: Object);
     ngOnInit(): void;
+    /**
+     * @deprecated No longer being used. To be removed.
+     * @breaking-change 11.0.0
+     */
     createEventsBoundInZone(): YT.Events;
     ngAfterViewInit(): void;
     ngOnDestroy(): void;
-    private _runInZone;
-    /** Proxied methods. */
     /** See https://developers.google.com/youtube/iframe_api_reference#playVideo */
     playVideo(): void;
     /** See https://developers.google.com/youtube/iframe_api_reference#pauseVideo */
@@ -121,4 +125,6 @@ export declare class YouTubePlayer implements AfterViewInit, OnDestroy, OnInit {
     private _getPendingState;
     /** Initializes a player from a temporary state. */
     private _initializePlayer;
+    /** Gets an observable that adds an event listener to the player when a user subscribes to it. */
+    private _getLazyEmitter;
 }
