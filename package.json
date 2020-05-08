@@ -1,15 +1,7 @@
 {
   "name": "@angular/youtube-player",
-  "version": "9.2.1-sha-dfe92fcac",
+  "version": "9.2.1-sha-6bfacb253",
   "description": "Angular YouTube Player",
-  "main": "./bundles/youtube-player.umd.js",
-  "fesm5": "./fesm5/youtube-player.js",
-  "fesm2015": "./fesm2015/youtube-player.js",
-  "esm5": "./esm5/index.js",
-  "esm2015": "./esm2015/index.js",
-  "typings": "./index.d.ts",
-  "module": "./fesm5/youtube-player.js",
-  "es2015": "./fesm2015/youtube-player.js",
   "repository": {
     "type": "git",
     "url": "https://github.com/angular/components.git"
@@ -26,14 +18,20 @@
   "homepage": "https://github.com/angular/components/tree/master/src/youtube-player#readme",
   "dependencies": {
     "@types/youtube": "^0.0.38",
-    "tslib": "^1.9.0"
+    "tslib": "^1.10.0"
   },
   "peerDependencies": {
-    "@angular/core": "^9.0.0 || ^10.0.0-0",
-    "@angular/common": "^9.0.0 || ^10.0.0-0"
+    "@angular/core": "^10.0.0-0 || ^11.0.0-0",
+    "@angular/common": "^10.0.0-0 || ^11.0.0-0"
   },
   "sideEffects": false,
   "publishConfig": {
     "registry": "https://wombat-dressing-room.appspot.com"
-  }
+  },
+  "main": "./bundles/youtube-player.umd.js",
+  "fesm2015": "./fesm2015/youtube-player.js",
+  "esm2015": "./esm2015/index.js",
+  "typings": "./index.d.ts",
+  "module": "./fesm2015/youtube-player.js",
+  "es2015": "./fesm2015/youtube-player.js"
 }
