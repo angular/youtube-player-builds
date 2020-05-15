@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy, ViewEncapsulation, NgZone, Optional, Inject, PLATFORM_ID, Input, Output, ViewChild, NgModule } from '@angular/core';
+import { Component, ChangeDetectionStrategy, ViewEncapsulation, NgZone, Inject, PLATFORM_ID, Input, Output, ViewChild, NgModule } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { Subject, BehaviorSubject, of, combineLatest, pipe, Observable, fromEventPattern, merge } from 'rxjs';
 import { take, startWith, combineLatest as combineLatest$1, skipWhile, map, scan, distinctUntilChanged, flatMap, takeUntil, publish, switchMap, withLatestFrom, filter } from 'rxjs/operators';
@@ -46,14 +46,9 @@ if (false) {
 class YouTubePlayer {
     /**
      * @param {?} _ngZone
-     * @param {?=} platformId
+     * @param {?} platformId
      */
-    constructor(_ngZone, 
-    /**
-     * @deprecated `platformId` parameter to become required.
-     * @breaking-change 10.0.0
-     */
-    platformId) {
+    constructor(_ngZone, platformId) {
         this._ngZone = _ngZone;
         this._youtubeContainer = new Subject();
         this._destroyed = new Subject();
@@ -73,9 +68,7 @@ class YouTubePlayer {
         this.apiChange = this._getLazyEmitter('onApiChange');
         this.playbackQualityChange = this._getLazyEmitter('onPlaybackQualityChange');
         this.playbackRateChange = this._getLazyEmitter('onPlaybackRateChange');
-        // @breaking-change 10.0.0 Remove null check for `platformId`.
-        this._isBrowser =
-            platformId ? isPlatformBrowser(platformId) : typeof window === 'object' && !!window;
+        this._isBrowser = isPlatformBrowser(platformId);
     }
     /**
      * YouTube Video ID to view
@@ -579,7 +572,7 @@ YouTubePlayer.decorators = [
 /** @nocollapse */
 YouTubePlayer.ctorParameters = () => [
     { type: NgZone },
-    { type: Object, decorators: [{ type: Optional }, { type: Inject, args: [PLATFORM_ID,] }] }
+    { type: Object, decorators: [{ type: Inject, args: [PLATFORM_ID,] }] }
 ];
 YouTubePlayer.propDecorators = {
     videoId: [{ type: Input }],

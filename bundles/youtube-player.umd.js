@@ -216,12 +216,7 @@
      * @see https://developers.google.com/youtube/iframe_api_reference
      */
     var YouTubePlayer = /** @class */ (function () {
-        function YouTubePlayer(_ngZone, 
-        /**
-         * @deprecated `platformId` parameter to become required.
-         * @breaking-change 10.0.0
-         */
-        platformId) {
+        function YouTubePlayer(_ngZone, platformId) {
             this._ngZone = _ngZone;
             this._youtubeContainer = new rxjs.Subject();
             this._destroyed = new rxjs.Subject();
@@ -239,9 +234,7 @@
             this.apiChange = this._getLazyEmitter('onApiChange');
             this.playbackQualityChange = this._getLazyEmitter('onPlaybackQualityChange');
             this.playbackRateChange = this._getLazyEmitter('onPlaybackRateChange');
-            // @breaking-change 10.0.0 Remove null check for `platformId`.
-            this._isBrowser =
-                platformId ? common.isPlatformBrowser(platformId) : typeof window === 'object' && !!window;
+            this._isBrowser = common.isPlatformBrowser(platformId);
         }
         Object.defineProperty(YouTubePlayer.prototype, "videoId", {
             /** YouTube Video ID to view */
@@ -596,7 +589,7 @@
         /** @nocollapse */
         YouTubePlayer.ctorParameters = function () { return [
             { type: core.NgZone },
-            { type: Object, decorators: [{ type: core.Optional }, { type: core.Inject, args: [core.PLATFORM_ID,] }] }
+            { type: Object, decorators: [{ type: core.Inject, args: [core.PLATFORM_ID,] }] }
         ]; };
         YouTubePlayer.propDecorators = {
             videoId: [{ type: core.Input }],
