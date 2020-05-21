@@ -608,36 +608,79 @@
             // Ensures that everything is cleared out on destroy.
             operators.takeUntil(this._destroyed));
         };
-        YouTubePlayer.decorators = [
-            { type: core.Component, args: [{
-                        selector: 'youtube-player',
-                        changeDetection: core.ChangeDetectionStrategy.OnPush,
-                        encapsulation: core.ViewEncapsulation.None,
-                        // This div is *replaced* by the YouTube player embed.
-                        template: '<div #youtubeContainer></div>'
-                    }] }
-        ];
-        /** @nocollapse */
-        YouTubePlayer.ctorParameters = function () { return [
-            { type: core.NgZone },
-            { type: Object, decorators: [{ type: core.Inject, args: [core.PLATFORM_ID,] }] }
-        ]; };
-        YouTubePlayer.propDecorators = {
-            videoId: [{ type: core.Input }],
-            height: [{ type: core.Input }],
-            width: [{ type: core.Input }],
-            startSeconds: [{ type: core.Input }],
-            endSeconds: [{ type: core.Input }],
-            suggestedQuality: [{ type: core.Input }],
-            showBeforeIframeApiLoads: [{ type: core.Input }],
-            ready: [{ type: core.Output }],
-            stateChange: [{ type: core.Output }],
-            error: [{ type: core.Output }],
-            apiChange: [{ type: core.Output }],
-            playbackQualityChange: [{ type: core.Output }],
-            playbackRateChange: [{ type: core.Output }],
-            youtubeContainer: [{ type: core.ViewChild, args: ['youtubeContainer',] }]
-        };
+        __decorate([
+            core.Input(),
+            __metadata("design:type", Object),
+            __metadata("design:paramtypes", [Object])
+        ], YouTubePlayer.prototype, "videoId", null);
+        __decorate([
+            core.Input(),
+            __metadata("design:type", Object),
+            __metadata("design:paramtypes", [Object])
+        ], YouTubePlayer.prototype, "height", null);
+        __decorate([
+            core.Input(),
+            __metadata("design:type", Object),
+            __metadata("design:paramtypes", [Object])
+        ], YouTubePlayer.prototype, "width", null);
+        __decorate([
+            core.Input(),
+            __metadata("design:type", Object),
+            __metadata("design:paramtypes", [Object])
+        ], YouTubePlayer.prototype, "startSeconds", null);
+        __decorate([
+            core.Input(),
+            __metadata("design:type", Object),
+            __metadata("design:paramtypes", [Object])
+        ], YouTubePlayer.prototype, "endSeconds", null);
+        __decorate([
+            core.Input(),
+            __metadata("design:type", Object),
+            __metadata("design:paramtypes", [Object])
+        ], YouTubePlayer.prototype, "suggestedQuality", null);
+        __decorate([
+            core.Input(),
+            __metadata("design:type", Object)
+        ], YouTubePlayer.prototype, "showBeforeIframeApiLoads", void 0);
+        __decorate([
+            core.Output(),
+            __metadata("design:type", rxjs.Observable)
+        ], YouTubePlayer.prototype, "ready", void 0);
+        __decorate([
+            core.Output(),
+            __metadata("design:type", rxjs.Observable)
+        ], YouTubePlayer.prototype, "stateChange", void 0);
+        __decorate([
+            core.Output(),
+            __metadata("design:type", rxjs.Observable)
+        ], YouTubePlayer.prototype, "error", void 0);
+        __decorate([
+            core.Output(),
+            __metadata("design:type", rxjs.Observable)
+        ], YouTubePlayer.prototype, "apiChange", void 0);
+        __decorate([
+            core.Output(),
+            __metadata("design:type", rxjs.Observable)
+        ], YouTubePlayer.prototype, "playbackQualityChange", void 0);
+        __decorate([
+            core.Output(),
+            __metadata("design:type", rxjs.Observable)
+        ], YouTubePlayer.prototype, "playbackRateChange", void 0);
+        __decorate([
+            core.ViewChild('youtubeContainer'),
+            __metadata("design:type", core.ElementRef)
+        ], YouTubePlayer.prototype, "youtubeContainer", void 0);
+        YouTubePlayer = __decorate([
+            core.Component({
+                selector: 'youtube-player',
+                changeDetection: core.ChangeDetectionStrategy.OnPush,
+                encapsulation: core.ViewEncapsulation.None,
+                // This div is *replaced* by the YouTube player embed.
+                template: '<div #youtubeContainer></div>'
+            }),
+            __param(1, core.Inject(core.PLATFORM_ID)),
+            __metadata("design:paramtypes", [core.NgZone, Object])
+        ], YouTubePlayer);
         return YouTubePlayer;
     }());
     /** Listens to changes to the given width and height and sets it on the player. */
@@ -801,12 +844,12 @@
     var YouTubePlayerModule = /** @class */ (function () {
         function YouTubePlayerModule() {
         }
-        YouTubePlayerModule.decorators = [
-            { type: core.NgModule, args: [{
-                        declarations: COMPONENTS,
-                        exports: COMPONENTS,
-                    },] }
-        ];
+        YouTubePlayerModule = __decorate([
+            core.NgModule({
+                declarations: COMPONENTS,
+                exports: COMPONENTS,
+            })
+        ], YouTubePlayerModule);
         return YouTubePlayerModule;
     }());
 
