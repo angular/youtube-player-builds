@@ -1,59 +1,25 @@
-import { Component, ChangeDetectionStrategy, ViewEncapsulation, NgZone, Inject, PLATFORM_ID, Input, Output, ViewChild, NgModule } from '@angular/core';
+import { __decorate, __metadata, __param } from 'tslib';
+import { Input, Output, ViewChild, ElementRef, Component, ChangeDetectionStrategy, ViewEncapsulation, Inject, PLATFORM_ID, NgZone, NgModule } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { Subject, BehaviorSubject, of, combineLatest, pipe, Observable, fromEventPattern, merge } from 'rxjs';
 import { take, startWith, combineLatest as combineLatest$1, skipWhile, map, scan, distinctUntilChanged, flatMap, takeUntil, publish, switchMap, withLatestFrom, filter } from 'rxjs/operators';
 
 /**
- * @fileoverview added by tsickle
- * Generated from: src/youtube-player/youtube-player.ts
- * @suppress {checkTypes,constantProperty,extraRequire,missingOverride,missingReturn,unusedPrivateMembers,uselessCode} checked by tsc
+ * @license
+ * Copyright Google LLC All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://angular.io/license
  */
-/** @type {?} */
 const DEFAULT_PLAYER_WIDTH = 640;
-/** @type {?} */
 const DEFAULT_PLAYER_HEIGHT = 390;
-/**
- * @record
- */
-function Player() { }
-if (false) {
-    /** @type {?|undefined} */
-    Player.prototype.videoId;
-}
-/**
- * Object used to store the state of the player if the
- * user tries to interact with the API before it has been loaded.
- * @record
- */
-function PendingPlayerState() { }
-if (false) {
-    /** @type {?|undefined} */
-    PendingPlayerState.prototype.playbackState;
-    /** @type {?|undefined} */
-    PendingPlayerState.prototype.playbackRate;
-    /** @type {?|undefined} */
-    PendingPlayerState.prototype.volume;
-    /** @type {?|undefined} */
-    PendingPlayerState.prototype.muted;
-    /** @type {?|undefined} */
-    PendingPlayerState.prototype.seek;
-}
 /**
  * Angular component that renders a YouTube player via the YouTube player
  * iframe API.
  * @see https://developers.google.com/youtube/iframe_api_reference
  */
 let YouTubePlayer = /** @class */ (() => {
-    /**
-     * Angular component that renders a YouTube player via the YouTube player
-     * iframe API.
-     * @see https://developers.google.com/youtube/iframe_api_reference
-     */
-    class YouTubePlayer {
-        /**
-         * @param {?} _ngZone
-         * @param {?} platformId
-         */
+    let YouTubePlayer = class YouTubePlayer {
         constructor(_ngZone, platformId) {
             this._ngZone = _ngZone;
             this._youtubeContainer = new Subject();
@@ -65,9 +31,7 @@ let YouTubePlayer = /** @class */ (() => {
             this._startSeconds = new BehaviorSubject(undefined);
             this._endSeconds = new BehaviorSubject(undefined);
             this._suggestedQuality = new BehaviorSubject(undefined);
-            /**
-             * Outputs are direct proxies from the player itself.
-             */
+            /** Outputs are direct proxies from the player itself. */
             this.ready = this._getLazyEmitter('onReady');
             this.stateChange = this._getLazyEmitter('onStateChange');
             this.error = this._getLazyEmitter('onError');
@@ -76,75 +40,38 @@ let YouTubePlayer = /** @class */ (() => {
             this.playbackRateChange = this._getLazyEmitter('onPlaybackRateChange');
             this._isBrowser = isPlatformBrowser(platformId);
         }
-        /**
-         * YouTube Video ID to view
-         * @return {?}
-         */
+        /** YouTube Video ID to view */
         get videoId() { return this._videoId.value; }
-        /**
-         * @param {?} videoId
-         * @return {?}
-         */
         set videoId(videoId) {
             this._videoId.next(videoId);
         }
-        /**
-         * Height of video player
-         * @return {?}
-         */
+        /** Height of video player */
         get height() { return this._height.value; }
-        /**
-         * @param {?} height
-         * @return {?}
-         */
         set height(height) {
             this._height.next(height || DEFAULT_PLAYER_HEIGHT);
         }
-        /**
-         * Width of video player
-         * @return {?}
-         */
+        /** Width of video player */
         get width() { return this._width.value; }
-        /**
-         * @param {?} width
-         * @return {?}
-         */
         set width(width) {
             this._width.next(width || DEFAULT_PLAYER_WIDTH);
         }
-        /**
-         * The moment when the player is supposed to start playing
-         * @param {?} startSeconds
-         * @return {?}
-         */
+        /** The moment when the player is supposed to start playing */
         set startSeconds(startSeconds) {
             this._startSeconds.next(startSeconds);
         }
-        /**
-         * The moment when the player is supposed to stop playing
-         * @param {?} endSeconds
-         * @return {?}
-         */
+        /** The moment when the player is supposed to stop playing */
         set endSeconds(endSeconds) {
             this._endSeconds.next(endSeconds);
         }
-        /**
-         * The suggested quality of the player
-         * @param {?} suggestedQuality
-         * @return {?}
-         */
+        /** The suggested quality of the player */
         set suggestedQuality(suggestedQuality) {
             this._suggestedQuality.next(suggestedQuality);
         }
-        /**
-         * @return {?}
-         */
         ngOnInit() {
             // Don't do anything if we're not in a browser environment.
             if (!this._isBrowser) {
                 return;
             }
-            /** @type {?} */
             let iframeApiAvailableObs = of(true);
             if (!window.YT) {
                 if (this.showBeforeIframeApiLoads) {
@@ -152,71 +79,48 @@ let YouTubePlayer = /** @class */ (() => {
                         'Please install the YouTube Player API Reference for iframe Embeds: ' +
                         'https://developers.google.com/youtube/iframe_api_reference');
                 }
-                /** @type {?} */
                 const iframeApiAvailableSubject = new Subject();
                 this._existingApiReadyCallback = window.onYouTubeIframeAPIReady;
-                window.onYouTubeIframeAPIReady = (/**
-                 * @return {?}
-                 */
-                () => {
+                window.onYouTubeIframeAPIReady = () => {
                     if (this._existingApiReadyCallback) {
                         this._existingApiReadyCallback();
                     }
-                    this._ngZone.run((/**
-                     * @return {?}
-                     */
-                    () => iframeApiAvailableSubject.next(true)));
-                });
+                    this._ngZone.run(() => iframeApiAvailableSubject.next(true));
+                };
                 iframeApiAvailableObs = iframeApiAvailableSubject.pipe(take(1), startWith(false));
             }
             // An observable of the currently loaded player.
-            /** @type {?} */
-            const playerObs = createPlayerObservable(this._youtubeContainer, this._videoId, iframeApiAvailableObs, this._width, this._height, this._ngZone).pipe(waitUntilReady((/**
-             * @param {?} player
-             * @return {?}
-             */
-            player => {
+            const playerObs = createPlayerObservable(this._youtubeContainer, this._videoId, iframeApiAvailableObs, this._width, this._height, this._ngZone).pipe(waitUntilReady(player => {
                 // Destroy the player if loading was aborted so that we don't end up leaking memory.
                 if (!playerIsReady(player)) {
                     player.destroy();
                 }
-            })), takeUntil(this._destroyed), publish());
+            }), takeUntil(this._destroyed), publish());
             // Set up side effects to bind inputs to the player.
-            playerObs.subscribe((/**
-             * @param {?} player
-             * @return {?}
-             */
-            player => {
+            playerObs.subscribe(player => {
                 this._player = player;
                 this._playerChanges.next(player);
                 if (player && this._pendingPlayerState) {
                     this._initializePlayer(player, this._pendingPlayerState);
                 }
                 this._pendingPlayerState = undefined;
-            }));
+            });
             bindSizeToPlayer(playerObs, this._width, this._height);
             bindSuggestedQualityToPlayer(playerObs, this._suggestedQuality);
             bindCueVideoCall(playerObs, this._videoId, this._startSeconds, this._endSeconds, this._suggestedQuality, this._destroyed);
             // After all of the subscriptions are set up, connect the observable.
-            ((/** @type {?} */ (playerObs))).connect();
+            playerObs.connect();
         }
         /**
          * @deprecated No longer being used. To be removed.
-         * \@breaking-change 11.0.0
-         * @return {?}
+         * @breaking-change 11.0.0
          */
         createEventsBoundInZone() {
             return {};
         }
-        /**
-         * @return {?}
-         */
         ngAfterViewInit() {
             this._youtubeContainer.next(this.youtubeContainer.nativeElement);
         }
-        /**
-         * @return {?}
-         */
         ngOnDestroy() {
             if (this._player) {
                 this._player.destroy();
@@ -233,10 +137,7 @@ let YouTubePlayer = /** @class */ (() => {
             this._destroyed.next();
             this._destroyed.complete();
         }
-        /**
-         * See https://developers.google.com/youtube/iframe_api_reference#playVideo
-         * @return {?}
-         */
+        /** See https://developers.google.com/youtube/iframe_api_reference#playVideo */
         playVideo() {
             if (this._player) {
                 this._player.playVideo();
@@ -245,10 +146,7 @@ let YouTubePlayer = /** @class */ (() => {
                 this._getPendingState().playbackState = 1 /* PLAYING */;
             }
         }
-        /**
-         * See https://developers.google.com/youtube/iframe_api_reference#pauseVideo
-         * @return {?}
-         */
+        /** See https://developers.google.com/youtube/iframe_api_reference#pauseVideo */
         pauseVideo() {
             if (this._player) {
                 this._player.pauseVideo();
@@ -257,10 +155,7 @@ let YouTubePlayer = /** @class */ (() => {
                 this._getPendingState().playbackState = 2 /* PAUSED */;
             }
         }
-        /**
-         * See https://developers.google.com/youtube/iframe_api_reference#stopVideo
-         * @return {?}
-         */
+        /** See https://developers.google.com/youtube/iframe_api_reference#stopVideo */
         stopVideo() {
             if (this._player) {
                 this._player.stopVideo();
@@ -270,12 +165,7 @@ let YouTubePlayer = /** @class */ (() => {
                 this._getPendingState().playbackState = 5 /* CUED */;
             }
         }
-        /**
-         * See https://developers.google.com/youtube/iframe_api_reference#seekTo
-         * @param {?} seconds
-         * @param {?} allowSeekAhead
-         * @return {?}
-         */
+        /** See https://developers.google.com/youtube/iframe_api_reference#seekTo */
         seekTo(seconds, allowSeekAhead) {
             if (this._player) {
                 this._player.seekTo(seconds, allowSeekAhead);
@@ -284,10 +174,7 @@ let YouTubePlayer = /** @class */ (() => {
                 this._getPendingState().seek = { seconds, allowSeekAhead };
             }
         }
-        /**
-         * See https://developers.google.com/youtube/iframe_api_reference#mute
-         * @return {?}
-         */
+        /** See https://developers.google.com/youtube/iframe_api_reference#mute */
         mute() {
             if (this._player) {
                 this._player.mute();
@@ -296,10 +183,7 @@ let YouTubePlayer = /** @class */ (() => {
                 this._getPendingState().muted = true;
             }
         }
-        /**
-         * See https://developers.google.com/youtube/iframe_api_reference#unMute
-         * @return {?}
-         */
+        /** See https://developers.google.com/youtube/iframe_api_reference#unMute */
         unMute() {
             if (this._player) {
                 this._player.unMute();
@@ -308,10 +192,7 @@ let YouTubePlayer = /** @class */ (() => {
                 this._getPendingState().muted = false;
             }
         }
-        /**
-         * See https://developers.google.com/youtube/iframe_api_reference#isMuted
-         * @return {?}
-         */
+        /** See https://developers.google.com/youtube/iframe_api_reference#isMuted */
         isMuted() {
             if (this._player) {
                 return this._player.isMuted();
@@ -321,11 +202,7 @@ let YouTubePlayer = /** @class */ (() => {
             }
             return false;
         }
-        /**
-         * See https://developers.google.com/youtube/iframe_api_reference#setVolume
-         * @param {?} volume
-         * @return {?}
-         */
+        /** See https://developers.google.com/youtube/iframe_api_reference#setVolume */
         setVolume(volume) {
             if (this._player) {
                 this._player.setVolume(volume);
@@ -334,10 +211,7 @@ let YouTubePlayer = /** @class */ (() => {
                 this._getPendingState().volume = volume;
             }
         }
-        /**
-         * See https://developers.google.com/youtube/iframe_api_reference#getVolume
-         * @return {?}
-         */
+        /** See https://developers.google.com/youtube/iframe_api_reference#getVolume */
         getVolume() {
             if (this._player) {
                 return this._player.getVolume();
@@ -347,11 +221,7 @@ let YouTubePlayer = /** @class */ (() => {
             }
             return 0;
         }
-        /**
-         * See https://developers.google.com/youtube/iframe_api_reference#setPlaybackRate
-         * @param {?} playbackRate
-         * @return {?}
-         */
+        /** See https://developers.google.com/youtube/iframe_api_reference#setPlaybackRate */
         setPlaybackRate(playbackRate) {
             if (this._player) {
                 return this._player.setPlaybackRate(playbackRate);
@@ -360,10 +230,7 @@ let YouTubePlayer = /** @class */ (() => {
                 this._getPendingState().playbackRate = playbackRate;
             }
         }
-        /**
-         * See https://developers.google.com/youtube/iframe_api_reference#getPlaybackRate
-         * @return {?}
-         */
+        /** See https://developers.google.com/youtube/iframe_api_reference#getPlaybackRate */
         getPlaybackRate() {
             if (this._player) {
                 return this._player.getPlaybackRate();
@@ -373,24 +240,15 @@ let YouTubePlayer = /** @class */ (() => {
             }
             return 0;
         }
-        /**
-         * See https://developers.google.com/youtube/iframe_api_reference#getAvailablePlaybackRates
-         * @return {?}
-         */
+        /** See https://developers.google.com/youtube/iframe_api_reference#getAvailablePlaybackRates */
         getAvailablePlaybackRates() {
             return this._player ? this._player.getAvailablePlaybackRates() : [];
         }
-        /**
-         * See https://developers.google.com/youtube/iframe_api_reference#getVideoLoadedFraction
-         * @return {?}
-         */
+        /** See https://developers.google.com/youtube/iframe_api_reference#getVideoLoadedFraction */
         getVideoLoadedFraction() {
             return this._player ? this._player.getVideoLoadedFraction() : 0;
         }
-        /**
-         * See https://developers.google.com/youtube/iframe_api_reference#getPlayerState
-         * @return {?}
-         */
+        /** See https://developers.google.com/youtube/iframe_api_reference#getPlayerState */
         getPlayerState() {
             if (!this._isBrowser || !window.YT) {
                 return undefined;
@@ -403,10 +261,7 @@ let YouTubePlayer = /** @class */ (() => {
             }
             return -1 /* UNSTARTED */;
         }
-        /**
-         * See https://developers.google.com/youtube/iframe_api_reference#getCurrentTime
-         * @return {?}
-         */
+        /** See https://developers.google.com/youtube/iframe_api_reference#getCurrentTime */
         getCurrentTime() {
             if (this._player) {
                 return this._player.getCurrentTime();
@@ -416,59 +271,34 @@ let YouTubePlayer = /** @class */ (() => {
             }
             return 0;
         }
-        /**
-         * See https://developers.google.com/youtube/iframe_api_reference#getPlaybackQuality
-         * @return {?}
-         */
+        /** See https://developers.google.com/youtube/iframe_api_reference#getPlaybackQuality */
         getPlaybackQuality() {
             return this._player ? this._player.getPlaybackQuality() : 'default';
         }
-        /**
-         * See https://developers.google.com/youtube/iframe_api_reference#getAvailableQualityLevels
-         * @return {?}
-         */
+        /** See https://developers.google.com/youtube/iframe_api_reference#getAvailableQualityLevels */
         getAvailableQualityLevels() {
             return this._player ? this._player.getAvailableQualityLevels() : [];
         }
-        /**
-         * See https://developers.google.com/youtube/iframe_api_reference#getDuration
-         * @return {?}
-         */
+        /** See https://developers.google.com/youtube/iframe_api_reference#getDuration */
         getDuration() {
             return this._player ? this._player.getDuration() : 0;
         }
-        /**
-         * See https://developers.google.com/youtube/iframe_api_reference#getVideoUrl
-         * @return {?}
-         */
+        /** See https://developers.google.com/youtube/iframe_api_reference#getVideoUrl */
         getVideoUrl() {
             return this._player ? this._player.getVideoUrl() : '';
         }
-        /**
-         * See https://developers.google.com/youtube/iframe_api_reference#getVideoEmbedCode
-         * @return {?}
-         */
+        /** See https://developers.google.com/youtube/iframe_api_reference#getVideoEmbedCode */
         getVideoEmbedCode() {
             return this._player ? this._player.getVideoEmbedCode() : '';
         }
-        /**
-         * Gets an object that should be used to store the temporary API state.
-         * @private
-         * @return {?}
-         */
+        /** Gets an object that should be used to store the temporary API state. */
         _getPendingState() {
             if (!this._pendingPlayerState) {
                 this._pendingPlayerState = {};
             }
             return this._pendingPlayerState;
         }
-        /**
-         * Initializes a player from a temporary state.
-         * @private
-         * @param {?} player
-         * @param {?} state
-         * @return {?}
-         */
+        /** Initializes a player from a temporary state. */
         _initializePlayer(player, state) {
             const { playbackState, playbackRate, volume, muted, seek } = state;
             switch (playbackState) {
@@ -495,35 +325,17 @@ let YouTubePlayer = /** @class */ (() => {
                 player.seekTo(seek.seconds, seek.allowSeekAhead);
             }
         }
-        /**
-         * Gets an observable that adds an event listener to the player when a user subscribes to it.
-         * @private
-         * @template T
-         * @param {?} name
-         * @return {?}
-         */
+        /** Gets an observable that adds an event listener to the player when a user subscribes to it. */
         _getLazyEmitter(name) {
             // Start with the stream of players. This way the events will be transferred
             // over to the new player if it gets swapped out under-the-hood.
             return this._playerChanges.pipe(
             // Switch to the bound event. `switchMap` ensures that the old event is removed when the
             // player is changed. If there's no player, return an observable that never emits.
-            switchMap((/**
-             * @param {?} player
-             * @return {?}
-             */
-            player => {
-                return player ? fromEventPattern((/**
-                 * @param {?} listener
-                 * @return {?}
-                 */
-                (listener) => {
+            switchMap(player => {
+                return player ? fromEventPattern((listener) => {
                     player.addEventListener(name, listener);
-                }), (/**
-                 * @param {?} listener
-                 * @return {?}
-                 */
-                (listener) => {
+                }, (listener) => {
                     // The API seems to throw when we try to unbind from a destroyed player and it doesn't
                     // expose whether the player has been destroyed so we have to wrap it in a try/catch to
                     // prevent the entire stream from erroring out.
@@ -531,303 +343,154 @@ let YouTubePlayer = /** @class */ (() => {
                         player.removeEventListener(name, listener);
                     }
                     catch (_a) { }
-                })) : of();
-            })), (
+                }) : of();
+            }), 
             // By default we run all the API interactions outside the zone
             // so we have to bring the events back in manually when they emit.
-            /**
-             * @param {?} source
-             * @return {?}
-             */
-            (source) => new Observable((/**
-             * @param {?} observer
-             * @return {?}
-             */
-            observer => source.subscribe({
-                next: (/**
-                 * @param {?} value
-                 * @return {?}
-                 */
-                value => this._ngZone.run((/**
-                 * @return {?}
-                 */
-                () => observer.next(value)))),
-                error: (/**
-                 * @param {?} error
-                 * @return {?}
-                 */
-                error => observer.error(error)),
-                complete: (/**
-                 * @return {?}
-                 */
-                () => observer.complete())
-            })))), 
+            (source) => new Observable(observer => source.subscribe({
+                next: value => this._ngZone.run(() => observer.next(value)),
+                error: error => observer.error(error),
+                complete: () => observer.complete()
+            })), 
             // Ensures that everything is cleared out on destroy.
             takeUntil(this._destroyed));
         }
-    }
-    YouTubePlayer.decorators = [
-        { type: Component, args: [{
-                    selector: 'youtube-player',
-                    changeDetection: ChangeDetectionStrategy.OnPush,
-                    encapsulation: ViewEncapsulation.None,
-                    // This div is *replaced* by the YouTube player embed.
-                    template: '<div #youtubeContainer></div>'
-                }] }
-    ];
-    /** @nocollapse */
-    YouTubePlayer.ctorParameters = () => [
-        { type: NgZone },
-        { type: Object, decorators: [{ type: Inject, args: [PLATFORM_ID,] }] }
-    ];
-    YouTubePlayer.propDecorators = {
-        videoId: [{ type: Input }],
-        height: [{ type: Input }],
-        width: [{ type: Input }],
-        startSeconds: [{ type: Input }],
-        endSeconds: [{ type: Input }],
-        suggestedQuality: [{ type: Input }],
-        showBeforeIframeApiLoads: [{ type: Input }],
-        ready: [{ type: Output }],
-        stateChange: [{ type: Output }],
-        error: [{ type: Output }],
-        apiChange: [{ type: Output }],
-        playbackQualityChange: [{ type: Output }],
-        playbackRateChange: [{ type: Output }],
-        youtubeContainer: [{ type: ViewChild, args: ['youtubeContainer',] }]
     };
+    __decorate([
+        Input(),
+        __metadata("design:type", Object),
+        __metadata("design:paramtypes", [Object])
+    ], YouTubePlayer.prototype, "videoId", null);
+    __decorate([
+        Input(),
+        __metadata("design:type", Object),
+        __metadata("design:paramtypes", [Object])
+    ], YouTubePlayer.prototype, "height", null);
+    __decorate([
+        Input(),
+        __metadata("design:type", Object),
+        __metadata("design:paramtypes", [Object])
+    ], YouTubePlayer.prototype, "width", null);
+    __decorate([
+        Input(),
+        __metadata("design:type", Object),
+        __metadata("design:paramtypes", [Object])
+    ], YouTubePlayer.prototype, "startSeconds", null);
+    __decorate([
+        Input(),
+        __metadata("design:type", Object),
+        __metadata("design:paramtypes", [Object])
+    ], YouTubePlayer.prototype, "endSeconds", null);
+    __decorate([
+        Input(),
+        __metadata("design:type", Object),
+        __metadata("design:paramtypes", [Object])
+    ], YouTubePlayer.prototype, "suggestedQuality", null);
+    __decorate([
+        Input(),
+        __metadata("design:type", Object)
+    ], YouTubePlayer.prototype, "showBeforeIframeApiLoads", void 0);
+    __decorate([
+        Output(),
+        __metadata("design:type", Observable)
+    ], YouTubePlayer.prototype, "ready", void 0);
+    __decorate([
+        Output(),
+        __metadata("design:type", Observable)
+    ], YouTubePlayer.prototype, "stateChange", void 0);
+    __decorate([
+        Output(),
+        __metadata("design:type", Observable)
+    ], YouTubePlayer.prototype, "error", void 0);
+    __decorate([
+        Output(),
+        __metadata("design:type", Observable)
+    ], YouTubePlayer.prototype, "apiChange", void 0);
+    __decorate([
+        Output(),
+        __metadata("design:type", Observable)
+    ], YouTubePlayer.prototype, "playbackQualityChange", void 0);
+    __decorate([
+        Output(),
+        __metadata("design:type", Observable)
+    ], YouTubePlayer.prototype, "playbackRateChange", void 0);
+    __decorate([
+        ViewChild('youtubeContainer'),
+        __metadata("design:type", ElementRef)
+    ], YouTubePlayer.prototype, "youtubeContainer", void 0);
+    YouTubePlayer = __decorate([
+        Component({
+            selector: 'youtube-player',
+            changeDetection: ChangeDetectionStrategy.OnPush,
+            encapsulation: ViewEncapsulation.None,
+            // This div is *replaced* by the YouTube player embed.
+            template: '<div #youtubeContainer></div>'
+        }),
+        __param(1, Inject(PLATFORM_ID)),
+        __metadata("design:paramtypes", [NgZone, Object])
+    ], YouTubePlayer);
     return YouTubePlayer;
 })();
-if (false) {
-    /**
-     * Whether we're currently rendering inside a browser.
-     * @type {?}
-     * @private
-     */
-    YouTubePlayer.prototype._isBrowser;
-    /**
-     * @type {?}
-     * @private
-     */
-    YouTubePlayer.prototype._youtubeContainer;
-    /**
-     * @type {?}
-     * @private
-     */
-    YouTubePlayer.prototype._destroyed;
-    /**
-     * @type {?}
-     * @private
-     */
-    YouTubePlayer.prototype._player;
-    /**
-     * @type {?}
-     * @private
-     */
-    YouTubePlayer.prototype._existingApiReadyCallback;
-    /**
-     * @type {?}
-     * @private
-     */
-    YouTubePlayer.prototype._pendingPlayerState;
-    /**
-     * @type {?}
-     * @private
-     */
-    YouTubePlayer.prototype._playerChanges;
-    /**
-     * @type {?}
-     * @private
-     */
-    YouTubePlayer.prototype._videoId;
-    /**
-     * @type {?}
-     * @private
-     */
-    YouTubePlayer.prototype._height;
-    /**
-     * @type {?}
-     * @private
-     */
-    YouTubePlayer.prototype._width;
-    /**
-     * @type {?}
-     * @private
-     */
-    YouTubePlayer.prototype._startSeconds;
-    /**
-     * @type {?}
-     * @private
-     */
-    YouTubePlayer.prototype._endSeconds;
-    /**
-     * @type {?}
-     * @private
-     */
-    YouTubePlayer.prototype._suggestedQuality;
-    /**
-     * Whether the iframe will attempt to load regardless of the status of the api on the
-     * page. Set this to true if you don't want the `onYouTubeIframeAPIReady` field to be
-     * set on the global window.
-     * @type {?}
-     */
-    YouTubePlayer.prototype.showBeforeIframeApiLoads;
-    /**
-     * Outputs are direct proxies from the player itself.
-     * @type {?}
-     */
-    YouTubePlayer.prototype.ready;
-    /** @type {?} */
-    YouTubePlayer.prototype.stateChange;
-    /** @type {?} */
-    YouTubePlayer.prototype.error;
-    /** @type {?} */
-    YouTubePlayer.prototype.apiChange;
-    /** @type {?} */
-    YouTubePlayer.prototype.playbackQualityChange;
-    /** @type {?} */
-    YouTubePlayer.prototype.playbackRateChange;
-    /**
-     * The element that will be replaced by the iframe.
-     * @type {?}
-     */
-    YouTubePlayer.prototype.youtubeContainer;
-    /**
-     * @type {?}
-     * @private
-     */
-    YouTubePlayer.prototype._ngZone;
-}
-/**
- * Listens to changes to the given width and height and sets it on the player.
- * @param {?} playerObs
- * @param {?} widthObs
- * @param {?} heightObs
- * @return {?}
- */
+/** Listens to changes to the given width and height and sets it on the player. */
 function bindSizeToPlayer(playerObs, widthObs, heightObs) {
     return combineLatest([playerObs, widthObs, heightObs])
-        .subscribe((/**
-     * @param {?} __0
-     * @return {?}
-     */
-    ([player, width, height]) => player && player.setSize(width, height)));
+        .subscribe(([player, width, height]) => player && player.setSize(width, height));
 }
-/**
- * Listens to changes from the suggested quality and sets it on the given player.
- * @param {?} playerObs
- * @param {?} suggestedQualityObs
- * @return {?}
- */
+/** Listens to changes from the suggested quality and sets it on the given player. */
 function bindSuggestedQualityToPlayer(playerObs, suggestedQualityObs) {
     return combineLatest([
         playerObs,
         suggestedQualityObs
-    ]).subscribe((/**
-     * @param {?} __0
-     * @return {?}
-     */
-    ([player, suggestedQuality]) => player && suggestedQuality && player.setPlaybackQuality(suggestedQuality)));
+    ]).subscribe(([player, suggestedQuality]) => player && suggestedQuality && player.setPlaybackQuality(suggestedQuality));
 }
 /**
  * Returns an observable that emits the loaded player once it's ready. Certain properties/methods
  * won't be available until the iframe finishes loading.
- * @param {?} onAbort Callback function that will be invoked if the player loading was aborted before
+ * @param onAbort Callback function that will be invoked if the player loading was aborted before
  * it was able to complete. Can be used to clean up any loose references.
- * @return {?}
  */
 function waitUntilReady(onAbort) {
-    return flatMap((/**
-     * @param {?} player
-     * @return {?}
-     */
-    player => {
+    return flatMap(player => {
         if (!player) {
             return of(undefined);
         }
         if (playerIsReady(player)) {
-            return of((/** @type {?} */ (player)));
+            return of(player);
         }
         // Since removeEventListener is not on Player when it's initialized, we can't use fromEvent.
         // The player is not initialized fully until the ready is called.
-        return new Observable((/**
-         * @param {?} emitter
-         * @return {?}
-         */
-        emitter => {
-            /** @type {?} */
+        return new Observable(emitter => {
             let aborted = false;
-            /** @type {?} */
             let resolved = false;
-            /** @type {?} */
-            const onReady = (/**
-             * @param {?} event
-             * @return {?}
-             */
-            (event) => {
+            const onReady = (event) => {
                 resolved = true;
                 if (!aborted) {
                     event.target.removeEventListener('onReady', onReady);
                     emitter.next(event.target);
                 }
-            });
+            };
             player.addEventListener('onReady', onReady);
-            return (/**
-             * @return {?}
-             */
-            () => {
+            return () => {
                 aborted = true;
                 if (!resolved) {
                     onAbort(player);
                 }
-            });
-        })).pipe(take(1), startWith(undefined));
-    }));
+            };
+        }).pipe(take(1), startWith(undefined));
+    });
 }
-/**
- * Create an observable for the player based on the given options.
- * @param {?} youtubeContainer
- * @param {?} videoIdObs
- * @param {?} iframeApiAvailableObs
- * @param {?} widthObs
- * @param {?} heightObs
- * @param {?} ngZone
- * @return {?}
- */
+/** Create an observable for the player based on the given options. */
 function createPlayerObservable(youtubeContainer, videoIdObs, iframeApiAvailableObs, widthObs, heightObs, ngZone) {
-    /** @type {?} */
     const playerOptions = videoIdObs
-        .pipe(withLatestFrom(combineLatest([widthObs, heightObs])), map((/**
-     * @param {?} __0
-     * @return {?}
-     */
-    ([videoId, [width, height]]) => videoId ? ({ videoId, width, height }) : undefined)));
+        .pipe(withLatestFrom(combineLatest([widthObs, heightObs])), map(([videoId, [width, height]]) => videoId ? ({ videoId, width, height }) : undefined));
     return combineLatest([youtubeContainer, playerOptions, of(ngZone)])
         .pipe(skipUntilRememberLatest(iframeApiAvailableObs), scan(syncPlayerState, undefined), distinctUntilChanged());
 }
-/**
- * Skips the given observable until the other observable emits true, then emit the latest.
- * @template T
- * @param {?} notifier
- * @return {?}
- */
+/** Skips the given observable until the other observable emits true, then emit the latest. */
 function skipUntilRememberLatest(notifier) {
-    return pipe(combineLatest$1(notifier), skipWhile((/**
-     * @param {?} __0
-     * @return {?}
-     */
-    ([_, doneSkipping]) => !doneSkipping)), map((/**
-     * @param {?} __0
-     * @return {?}
-     */
-    ([value]) => value)));
+    return pipe(combineLatest$1(notifier), skipWhile(([_, doneSkipping]) => !doneSkipping), map(([value]) => value));
 }
-/**
- * Destroy the player if there are no options, or create the player if there are options.
- * @param {?} player
- * @param {?} __1
- * @return {?}
- */
+/** Destroy the player if there are no options, or create the player if there are options. */
 function syncPlayerState(player, [container, videoOptions, ngZone]) {
     if (!videoOptions) {
         if (player) {
@@ -840,11 +503,7 @@ function syncPlayerState(player, [container, videoOptions, ngZone]) {
     }
     // Important! We need to create the Player object outside of the `NgZone`, because it kicks
     // off a 250ms setInterval which will continually trigger change detection if we don't.
-    /** @type {?} */
-    const newPlayer = ngZone.runOutsideAngular((/**
-     * @return {?}
-     */
-    () => new YT.Player(container, videoOptions)));
+    const newPlayer = ngZone.runOutsideAngular(() => new YT.Player(container, videoOptions));
     // Bind videoId for future use.
     newPlayer.videoId = videoOptions.videoId;
     return newPlayer;
@@ -853,126 +512,69 @@ function syncPlayerState(player, [container, videoOptions, ngZone]) {
  * Call cueVideoById if the videoId changes, or when start or end seconds change. cueVideoById will
  * change the loaded video id to the given videoId, and set the start and end times to the given
  * start/end seconds.
- * @param {?} playerObs
- * @param {?} videoIdObs
- * @param {?} startSecondsObs
- * @param {?} endSecondsObs
- * @param {?} suggestedQualityObs
- * @param {?} destroyed
- * @return {?}
  */
 function bindCueVideoCall(playerObs, videoIdObs, startSecondsObs, endSecondsObs, suggestedQualityObs, destroyed) {
-    /** @type {?} */
     const cueOptionsObs = combineLatest([startSecondsObs, endSecondsObs])
-        .pipe(map((/**
-     * @param {?} __0
-     * @return {?}
-     */
-    ([startSeconds, endSeconds]) => ({ startSeconds, endSeconds }))));
+        .pipe(map(([startSeconds, endSeconds]) => ({ startSeconds, endSeconds })));
     // Only respond to changes in cue options if the player is not running.
-    /** @type {?} */
     const filteredCueOptions = cueOptionsObs
-        .pipe(filterOnOther(playerObs, (/**
-     * @param {?} player
-     * @return {?}
-     */
-    player => !!player && !hasPlayerStarted(player))));
+        .pipe(filterOnOther(playerObs, player => !!player && !hasPlayerStarted(player)));
     // If the video id changed, there's no reason to run 'cue' unless the player
     // was initialized with a different video id.
-    /** @type {?} */
     const changedVideoId = videoIdObs
-        .pipe(filterOnOther(playerObs, (/**
-     * @param {?} player
-     * @param {?} videoId
-     * @return {?}
-     */
-    (player, videoId) => !!player && player.videoId !== videoId)));
+        .pipe(filterOnOther(playerObs, (player, videoId) => !!player && player.videoId !== videoId));
     // If the player changed, there's no reason to run 'cue' unless there are cue options.
-    /** @type {?} */
-    const changedPlayer = playerObs.pipe(filterOnOther(combineLatest([videoIdObs, cueOptionsObs]), (/**
-     * @param {?} __0
-     * @param {?} player
-     * @return {?}
-     */
-    ([videoId, cueOptions], player) => !!player &&
-        (videoId != player.videoId || !!cueOptions.startSeconds || !!cueOptions.endSeconds))));
+    const changedPlayer = playerObs.pipe(filterOnOther(combineLatest([videoIdObs, cueOptionsObs]), ([videoId, cueOptions], player) => !!player &&
+        (videoId != player.videoId || !!cueOptions.startSeconds || !!cueOptions.endSeconds)));
     merge(changedPlayer, changedVideoId, filteredCueOptions)
-        .pipe(withLatestFrom(combineLatest([playerObs, videoIdObs, cueOptionsObs, suggestedQualityObs])), map((/**
-     * @param {?} __0
-     * @return {?}
-     */
-    ([_, values]) => values)), takeUntil(destroyed))
-        .subscribe((/**
-     * @param {?} __0
-     * @return {?}
-     */
-    ([player, videoId, cueOptions, suggestedQuality]) => {
+        .pipe(withLatestFrom(combineLatest([playerObs, videoIdObs, cueOptionsObs, suggestedQualityObs])), map(([_, values]) => values), takeUntil(destroyed))
+        .subscribe(([player, videoId, cueOptions, suggestedQuality]) => {
         if (!videoId || !player) {
             return;
         }
         player.videoId = videoId;
         player.cueVideoById(Object.assign({ videoId,
             suggestedQuality }, cueOptions));
-    }));
+    });
 }
-/**
- * @param {?} player
- * @return {?}
- */
 function hasPlayerStarted(player) {
-    /** @type {?} */
     const state = player.getPlayerState();
     return state !== -1 /* UNSTARTED */ && state !== 5 /* CUED */;
 }
-/**
- * @param {?} player
- * @return {?}
- */
 function playerIsReady(player) {
     return 'getPlayerStatus' in player;
 }
-/**
- * Combines the two observables temporarily for the filter function.
- * @template R, T
- * @param {?} otherObs
- * @param {?} filterFn
- * @return {?}
- */
+/** Combines the two observables temporarily for the filter function. */
 function filterOnOther(otherObs, filterFn) {
-    return pipe(withLatestFrom(otherObs), filter((/**
-     * @param {?} __0
-     * @return {?}
-     */
-    ([value, other]) => filterFn(other, value))), map((/**
-     * @param {?} __0
-     * @return {?}
-     */
-    ([value]) => value)));
+    return pipe(withLatestFrom(otherObs), filter(([value, other]) => filterFn(other, value)), map(([value]) => value));
 }
 
 /**
- * @fileoverview added by tsickle
- * Generated from: src/youtube-player/youtube-module.ts
- * @suppress {checkTypes,constantProperty,extraRequire,missingOverride,missingReturn,unusedPrivateMembers,uselessCode} checked by tsc
+ * @license
+ * Copyright Google LLC All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://angular.io/license
  */
-/** @type {?} */
 const COMPONENTS = [YouTubePlayer];
 let YouTubePlayerModule = /** @class */ (() => {
-    class YouTubePlayerModule {
-    }
-    YouTubePlayerModule.decorators = [
-        { type: NgModule, args: [{
-                    declarations: COMPONENTS,
-                    exports: COMPONENTS,
-                },] }
-    ];
+    let YouTubePlayerModule = class YouTubePlayerModule {
+    };
+    YouTubePlayerModule = __decorate([
+        NgModule({
+            declarations: COMPONENTS,
+            exports: COMPONENTS,
+        })
+    ], YouTubePlayerModule);
     return YouTubePlayerModule;
 })();
 
 /**
- * @fileoverview added by tsickle
- * Generated from: src/youtube-player/public-api.ts
- * @suppress {checkTypes,constantProperty,extraRequire,missingOverride,missingReturn,unusedPrivateMembers,uselessCode} checked by tsc
+ * @license
+ * Copyright Google LLC All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://angular.io/license
  */
 
 /**
