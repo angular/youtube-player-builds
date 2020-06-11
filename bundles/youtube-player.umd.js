@@ -318,7 +318,11 @@
                 iframeApiAvailableObs = iframeApiAvailableSubject_1.pipe(operators.take(1), operators.startWith(false));
             }
             // An observable of the currently loaded player.
-            var playerObs = createPlayerObservable(this._youtubeContainer, this._videoId, iframeApiAvailableObs, this._width, this._height, this._ngZone).pipe(waitUntilReady(function (player) {
+            var playerObs = createPlayerObservable(this._youtubeContainer, this._videoId, iframeApiAvailableObs, this._width, this._height, this._ngZone).pipe(operators.tap(function (player) {
+                // Emit this before the `waitUntilReady` call so that we can bind to
+                // events that happen as the player is being initialized (e.g. `onReady`).
+                _this._playerChanges.next(player);
+            }), waitUntilReady(function (player) {
                 // Destroy the player if loading was aborted so that we don't end up leaking memory.
                 if (!playerIsReady(player)) {
                     player.destroy();
@@ -327,7 +331,6 @@
             // Set up side effects to bind inputs to the player.
             playerObs.subscribe(function (player) {
                 _this._player = player;
-                _this._playerChanges.next(player);
                 if (player && _this._pendingPlayerState) {
                     _this._initializePlayer(player, _this._pendingPlayerState);
                 }
@@ -569,7 +572,9 @@
                     // expose whether the player has been destroyed so we have to wrap it in a try/catch to
                     // prevent the entire stream from erroring out.
                     try {
-                        player.removeEventListener(name, listener);
+                        if (player.removeEventListener) {
+                            player.removeEventListener(name, listener);
+                        }
                     }
                     catch (_a) { }
                 }) : rxjs.of();
