@@ -1,7 +1,7 @@
 import { Component, ChangeDetectionStrategy, ViewEncapsulation, NgZone, Inject, PLATFORM_ID, Input, Output, ViewChild, NgModule } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { Subject, BehaviorSubject, of, combineLatest, pipe, Observable, fromEventPattern, merge } from 'rxjs';
-import { take, startWith, combineLatest as combineLatest$1, skipWhile, map, scan, distinctUntilChanged, flatMap, takeUntil, publish, switchMap, withLatestFrom, filter } from 'rxjs/operators';
+import { take, startWith, combineLatest as combineLatest$1, skipWhile, map, scan, distinctUntilChanged, tap, flatMap, takeUntil, publish, switchMap, withLatestFrom, filter } from 'rxjs/operators';
 
 /**
  * @license
@@ -89,7 +89,11 @@ let YouTubePlayer = /** @class */ (() => {
                 iframeApiAvailableObs = iframeApiAvailableSubject.pipe(take(1), startWith(false));
             }
             // An observable of the currently loaded player.
-            const playerObs = createPlayerObservable(this._youtubeContainer, this._videoId, iframeApiAvailableObs, this._width, this._height, this._ngZone).pipe(waitUntilReady(player => {
+            const playerObs = createPlayerObservable(this._youtubeContainer, this._videoId, iframeApiAvailableObs, this._width, this._height, this._ngZone).pipe(tap(player => {
+                // Emit this before the `waitUntilReady` call so that we can bind to
+                // events that happen as the player is being initialized (e.g. `onReady`).
+                this._playerChanges.next(player);
+            }), waitUntilReady(player => {
                 // Destroy the player if loading was aborted so that we don't end up leaking memory.
                 if (!playerIsReady(player)) {
                     player.destroy();
@@ -98,7 +102,6 @@ let YouTubePlayer = /** @class */ (() => {
             // Set up side effects to bind inputs to the player.
             playerObs.subscribe(player => {
                 this._player = player;
-                this._playerChanges.next(player);
                 if (player && this._pendingPlayerState) {
                     this._initializePlayer(player, this._pendingPlayerState);
                 }
@@ -339,7 +342,9 @@ let YouTubePlayer = /** @class */ (() => {
                     // expose whether the player has been destroyed so we have to wrap it in a try/catch to
                     // prevent the entire stream from erroring out.
                     try {
-                        player.removeEventListener(name, listener);
+                        if (player.removeEventListener) {
+                            player.removeEventListener(name, listener);
+                        }
                     }
                     catch (_a) { }
                 }) : of();
