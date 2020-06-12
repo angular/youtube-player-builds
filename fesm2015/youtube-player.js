@@ -367,9 +367,8 @@ let YouTubePlayer = /** @class */ (() => {
                     encapsulation: ViewEncapsulation.None,
                     // This div is *replaced* by the YouTube player embed.
                     template: '<div #youtubeContainer></div>'
-                }] }
+                },] }
     ];
-    /** @nocollapse */
     YouTubePlayer.ctorParameters = () => [
         { type: NgZone },
         { type: Object, decorators: [{ type: Inject, args: [PLATFORM_ID,] }] }
