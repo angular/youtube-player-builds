@@ -620,9 +620,8 @@
                         encapsulation: core.ViewEncapsulation.None,
                         // This div is *replaced* by the YouTube player embed.
                         template: '<div #youtubeContainer></div>'
-                    }] }
+                    },] }
         ];
-        /** @nocollapse */
         YouTubePlayer.ctorParameters = function () { return [
             { type: core.NgZone },
             { type: Object, decorators: [{ type: core.Inject, args: [core.PLATFORM_ID,] }] }
