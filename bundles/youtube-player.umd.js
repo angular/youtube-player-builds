@@ -258,6 +258,7 @@
             this._startSeconds = new rxjs.BehaviorSubject(undefined);
             this._endSeconds = new rxjs.BehaviorSubject(undefined);
             this._suggestedQuality = new rxjs.BehaviorSubject(undefined);
+            this._playerVars = new rxjs.BehaviorSubject(undefined);
             /** Outputs are direct proxies from the player itself. */
             this.ready = this._getLazyEmitter('onReady');
             this.stateChange = this._getLazyEmitter('onStateChange');
@@ -318,6 +319,18 @@
             enumerable: false,
             configurable: true
         });
+        Object.defineProperty(YouTubePlayer.prototype, "playerVars", {
+            /**
+             * Extra parameters used to configure the player. See:
+             * https://developers.google.com/youtube/player_parameters.html?playerVersion=HTML5#Parameters
+             */
+            get: function () { return this._playerVars.value; },
+            set: function (playerVars) {
+                this._playerVars.next(playerVars);
+            },
+            enumerable: false,
+            configurable: true
+        });
         YouTubePlayer.prototype.ngOnInit = function () {
             var _this = this;
             // Don't do anything if we're not in a browser environment.
@@ -342,7 +355,7 @@
                 iframeApiAvailableObs = iframeApiAvailableSubject_1.pipe(operators.take(1), operators.startWith(false));
             }
             // An observable of the currently loaded player.
-            var playerObs = createPlayerObservable(this._youtubeContainer, this._videoId, iframeApiAvailableObs, this._width, this._height, this._ngZone).pipe(operators.tap(function (player) {
+            var playerObs = createPlayerObservable(this._youtubeContainer, this._videoId, iframeApiAvailableObs, this._width, this._height, this._playerVars, this._ngZone).pipe(operators.tap(function (player) {
                 // Emit this before the `waitUntilReady` call so that we can bind to
                 // events that happen as the player is being initialized (e.g. `onReady`).
                 _this._playerChanges.next(player);
@@ -389,6 +402,7 @@
             this._endSeconds.complete();
             this._suggestedQuality.complete();
             this._youtubeContainer.complete();
+            this._playerVars.complete();
             this._destroyed.next();
             this._destroyed.complete();
         };
@@ -633,6 +647,7 @@
             startSeconds: [{ type: core.Input }],
             endSeconds: [{ type: core.Input }],
             suggestedQuality: [{ type: core.Input }],
+            playerVars: [{ type: core.Input }],
             showBeforeIframeApiLoads: [{ type: core.Input }],
             ready: [{ type: core.Output }],
             stateChange: [{ type: core.Output }],
@@ -699,11 +714,12 @@
         });
     }
     /** Create an observable for the player based on the given options. */
-    function createPlayerObservable(youtubeContainer, videoIdObs, iframeApiAvailableObs, widthObs, heightObs, ngZone) {
-        var playerOptions = videoIdObs
-            .pipe(operators.withLatestFrom(rxjs.combineLatest([widthObs, heightObs])), operators.map(function (_a) {
-            var _b = __read(_a, 2), videoId = _b[0], _c = __read(_b[1], 2), width = _c[0], height = _c[1];
-            return videoId ? ({ videoId: videoId, width: width, height: height }) : undefined;
+    function createPlayerObservable(youtubeContainer, videoIdObs, iframeApiAvailableObs, widthObs, heightObs, playerVarsObs, ngZone) {
+        var playerOptions = rxjs.combineLatest([videoIdObs, playerVarsObs]).pipe(operators.withLatestFrom(rxjs.combineLatest([widthObs, heightObs])), operators.map(function (_a) {
+            var _b = __read(_a, 2), constructorOptions = _b[0], sizeOptions = _b[1];
+            var _c = __read(constructorOptions, 2), videoId = _c[0], playerVars = _c[1];
+            var _d = __read(sizeOptions, 2), width = _d[0], height = _d[1];
+            return videoId ? ({ videoId: videoId, playerVars: playerVars, width: width, height: height }) : undefined;
         }));
         return rxjs.combineLatest([youtubeContainer, playerOptions, rxjs.of(ngZone)])
             .pipe(skipUntilRememberLatest(iframeApiAvailableObs), operators.scan(syncPlayerState, undefined), operators.distinctUntilChanged());
@@ -721,20 +737,25 @@
     /** Destroy the player if there are no options, or create the player if there are options. */
     function syncPlayerState(player, _a) {
         var _b = __read(_a, 3), container = _b[0], videoOptions = _b[1], ngZone = _b[2];
-        if (!videoOptions) {
+        if (player && videoOptions && player.playerVars !== videoOptions.playerVars) {
+            // The player needs to be recreated if the playerVars are different.
+            player.destroy();
+        }
+        else if (!videoOptions) {
             if (player) {
+                // Destroy the player if the videoId was removed.
                 player.destroy();
             }
             return;
         }
-        if (player) {
+        else if (player) {
             return player;
         }
         // Important! We need to create the Player object outside of the `NgZone`, because it kicks
         // off a 250ms setInterval which will continually trigger change detection if we don't.
         var newPlayer = ngZone.runOutsideAngular(function () { return new YT.Player(container, videoOptions); });
-        // Bind videoId for future use.
         newPlayer.videoId = videoOptions.videoId;
+        newPlayer.playerVars = videoOptions.playerVars;
         return newPlayer;
     }
     /**

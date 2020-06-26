@@ -53,6 +53,13 @@ export declare class YouTubePlayer implements AfterViewInit, OnDestroy, OnInit {
     set suggestedQuality(suggestedQuality: YT.SuggestedVideoQuality | undefined);
     private _suggestedQuality;
     /**
+     * Extra parameters used to configure the player. See:
+     * https://developers.google.com/youtube/player_parameters.html?playerVersion=HTML5#Parameters
+     */
+    get playerVars(): YT.PlayerVars | undefined;
+    set playerVars(playerVars: YT.PlayerVars | undefined);
+    private _playerVars;
+    /**
      * Whether the iframe will attempt to load regardless of the status of the api on the
      * page. Set this to true if you don't want the `onYouTubeIframeAPIReady` field to be
      * set on the global window.

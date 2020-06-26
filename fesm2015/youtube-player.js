@@ -30,6 +30,7 @@ let YouTubePlayer = /** @class */ (() => {
             this._startSeconds = new BehaviorSubject(undefined);
             this._endSeconds = new BehaviorSubject(undefined);
             this._suggestedQuality = new BehaviorSubject(undefined);
+            this._playerVars = new BehaviorSubject(undefined);
             /** Outputs are direct proxies from the player itself. */
             this.ready = this._getLazyEmitter('onReady');
             this.stateChange = this._getLazyEmitter('onStateChange');
@@ -66,6 +67,14 @@ let YouTubePlayer = /** @class */ (() => {
         set suggestedQuality(suggestedQuality) {
             this._suggestedQuality.next(suggestedQuality);
         }
+        /**
+         * Extra parameters used to configure the player. See:
+         * https://developers.google.com/youtube/player_parameters.html?playerVersion=HTML5#Parameters
+         */
+        get playerVars() { return this._playerVars.value; }
+        set playerVars(playerVars) {
+            this._playerVars.next(playerVars);
+        }
         ngOnInit() {
             // Don't do anything if we're not in a browser environment.
             if (!this._isBrowser) {
@@ -89,7 +98,7 @@ let YouTubePlayer = /** @class */ (() => {
                 iframeApiAvailableObs = iframeApiAvailableSubject.pipe(take(1), startWith(false));
             }
             // An observable of the currently loaded player.
-            const playerObs = createPlayerObservable(this._youtubeContainer, this._videoId, iframeApiAvailableObs, this._width, this._height, this._ngZone).pipe(tap(player => {
+            const playerObs = createPlayerObservable(this._youtubeContainer, this._videoId, iframeApiAvailableObs, this._width, this._height, this._playerVars, this._ngZone).pipe(tap(player => {
                 // Emit this before the `waitUntilReady` call so that we can bind to
                 // events that happen as the player is being initialized (e.g. `onReady`).
                 this._playerChanges.next(player);
@@ -136,6 +145,7 @@ let YouTubePlayer = /** @class */ (() => {
             this._endSeconds.complete();
             this._suggestedQuality.complete();
             this._youtubeContainer.complete();
+            this._playerVars.complete();
             this._destroyed.next();
             this._destroyed.complete();
         }
@@ -380,6 +390,7 @@ let YouTubePlayer = /** @class */ (() => {
         startSeconds: [{ type: Input }],
         endSeconds: [{ type: Input }],
         suggestedQuality: [{ type: Input }],
+        playerVars: [{ type: Input }],
         showBeforeIframeApiLoads: [{ type: Input }],
         ready: [{ type: Output }],
         stateChange: [{ type: Output }],
@@ -440,9 +451,12 @@ function waitUntilReady(onAbort) {
     });
 }
 /** Create an observable for the player based on the given options. */
-function createPlayerObservable(youtubeContainer, videoIdObs, iframeApiAvailableObs, widthObs, heightObs, ngZone) {
-    const playerOptions = videoIdObs
-        .pipe(withLatestFrom(combineLatest([widthObs, heightObs])), map(([videoId, [width, height]]) => videoId ? ({ videoId, width, height }) : undefined));
+function createPlayerObservable(youtubeContainer, videoIdObs, iframeApiAvailableObs, widthObs, heightObs, playerVarsObs, ngZone) {
+    const playerOptions = combineLatest([videoIdObs, playerVarsObs]).pipe(withLatestFrom(combineLatest([widthObs, heightObs])), map(([constructorOptions, sizeOptions]) => {
+        const [videoId, playerVars] = constructorOptions;
+        const [width, height] = sizeOptions;
+        return videoId ? ({ videoId, playerVars, width, height }) : undefined;
+    }));
     return combineLatest([youtubeContainer, playerOptions, of(ngZone)])
         .pipe(skipUntilRememberLatest(iframeApiAvailableObs), scan(syncPlayerState, undefined), distinctUntilChanged());
 }
@@ -452,20 +466,25 @@ function skipUntilRememberLatest(notifier) {
 }
 /** Destroy the player if there are no options, or create the player if there are options. */
 function syncPlayerState(player, [container, videoOptions, ngZone]) {
-    if (!videoOptions) {
+    if (player && videoOptions && player.playerVars !== videoOptions.playerVars) {
+        // The player needs to be recreated if the playerVars are different.
+        player.destroy();
+    }
+    else if (!videoOptions) {
         if (player) {
+            // Destroy the player if the videoId was removed.
             player.destroy();
         }
         return;
     }
-    if (player) {
+    else if (player) {
         return player;
     }
     // Important! We need to create the Player object outside of the `NgZone`, because it kicks
     // off a 250ms setInterval which will continually trigger change detection if we don't.
     const newPlayer = ngZone.runOutsideAngular(() => new YT.Player(container, videoOptions));
-    // Bind videoId for future use.
     newPlayer.videoId = videoOptions.videoId;
+    newPlayer.playerVars = videoOptions.playerVars;
     return newPlayer;
 }
 /**
