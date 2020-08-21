@@ -81,7 +81,7 @@ class YouTubePlayer {
         }
         let iframeApiAvailableObs = of(true);
         if (!window.YT) {
-            if (this.showBeforeIframeApiLoads) {
+            if (this.showBeforeIframeApiLoads && (typeof ngDevMode === 'undefined' || ngDevMode)) {
                 throw new Error('Namespace YT not found, cannot construct embedded youtube player. ' +
                     'Please install the YouTube Player API Reference for iframe Embeds: ' +
                     'https://developers.google.com/youtube/iframe_api_reference');
