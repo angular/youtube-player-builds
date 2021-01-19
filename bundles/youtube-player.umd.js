@@ -750,7 +750,7 @@
      * it was able to complete. Can be used to clean up any loose references.
      */
     function waitUntilReady(onAbort) {
-        return operators.flatMap(function (player) {
+        return operators.mergeMap(function (player) {
             if (!player) {
                 return rxjs.of(undefined);
             }
