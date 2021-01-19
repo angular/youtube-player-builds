@@ -1,7 +1,7 @@
 import { Component, ChangeDetectionStrategy, ViewEncapsulation, NgZone, Inject, PLATFORM_ID, Input, Output, ViewChild, NgModule } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { Subject, BehaviorSubject, of, combineLatest, pipe, Observable, fromEventPattern, merge } from 'rxjs';
-import { take, startWith, combineLatest as combineLatest$1, skipWhile, map, scan, distinctUntilChanged, tap, flatMap, takeUntil, publish, switchMap, withLatestFrom, filter } from 'rxjs/operators';
+import { take, startWith, combineLatest as combineLatest$1, skipWhile, map, scan, distinctUntilChanged, tap, mergeMap, takeUntil, publish, switchMap, withLatestFrom, filter } from 'rxjs/operators';
 
 /**
  * @license
@@ -418,7 +418,7 @@ function bindSuggestedQualityToPlayer(playerObs, suggestedQualityObs) {
  * it was able to complete. Can be used to clean up any loose references.
  */
 function waitUntilReady(onAbort) {
-    return flatMap(player => {
+    return mergeMap(player => {
         if (!player) {
             return of(undefined);
         }
