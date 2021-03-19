@@ -1,7 +1,7 @@
 (function (global, factory) {
     typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports, require('@angular/core'), require('@angular/common'), require('rxjs'), require('rxjs/operators')) :
     typeof define === 'function' && define.amd ? define('@angular/youtube-player', ['exports', '@angular/core', '@angular/common', 'rxjs', 'rxjs/operators'], factory) :
-    (global = global || self, factory((global.ng = global.ng || {}, global.ng.youtubePlayer = {}), global.ng.core, global.ng.common, global.rxjs, global.rxjs.operators));
+    (global = typeof globalThis !== 'undefined' ? globalThis : global || self, factory((global.ng = global.ng || {}, global.ng.youtubePlayer = {}), global.ng.core, global.ng.common, global.rxjs, global.rxjs.operators));
 }(this, (function (exports, core, common, rxjs, operators) { 'use strict';
 
     /*! *****************************************************************************
