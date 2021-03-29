@@ -486,7 +486,7 @@
                 this._player.playVideo();
             }
             else {
-                this._getPendingState().playbackState = 1 /* PLAYING */;
+                this._getPendingState().playbackState = YT.PlayerState.PLAYING;
             }
         };
         /** See https://developers.google.com/youtube/iframe_api_reference#pauseVideo */
@@ -495,7 +495,7 @@
                 this._player.pauseVideo();
             }
             else {
-                this._getPendingState().playbackState = 2 /* PAUSED */;
+                this._getPendingState().playbackState = YT.PlayerState.PAUSED;
             }
         };
         /** See https://developers.google.com/youtube/iframe_api_reference#stopVideo */
@@ -505,7 +505,7 @@
             }
             else {
                 // It seems like YouTube sets the player to CUED when it's stopped.
-                this._getPendingState().playbackState = 5 /* CUED */;
+                this._getPendingState().playbackState = YT.PlayerState.CUED;
             }
         };
         /** See https://developers.google.com/youtube/iframe_api_reference#seekTo */
@@ -602,7 +602,7 @@
             if (this._pendingPlayerState && this._pendingPlayerState.playbackState != null) {
                 return this._pendingPlayerState.playbackState;
             }
-            return -1 /* UNSTARTED */;
+            return YT.PlayerState.UNSTARTED;
         };
         /** See https://developers.google.com/youtube/iframe_api_reference#getCurrentTime */
         YouTubePlayer.prototype.getCurrentTime = function () {
@@ -645,13 +645,13 @@
         YouTubePlayer.prototype._initializePlayer = function (player, state) {
             var playbackState = state.playbackState, playbackRate = state.playbackRate, volume = state.volume, muted = state.muted, seek = state.seek;
             switch (playbackState) {
-                case 1 /* PLAYING */:
+                case YT.PlayerState.PLAYING:
                     player.playVideo();
                     break;
-                case 2 /* PAUSED */:
+                case YT.PlayerState.PAUSED:
                     player.pauseVideo();
                     break;
-                case 5 /* CUED */:
+                case YT.PlayerState.CUED:
                     player.stopVideo();
                     break;
             }
@@ -873,7 +873,7 @@
     }
     function hasPlayerStarted(player) {
         var state = player.getPlayerState();
-        return state !== -1 /* UNSTARTED */ && state !== 5 /* CUED */;
+        return state !== YT.PlayerState.UNSTARTED && state !== YT.PlayerState.CUED;
     }
     function playerIsReady(player) {
         return 'getPlayerStatus' in player;
