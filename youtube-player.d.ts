@@ -25,33 +25,33 @@ export declare class YouTubePlayer implements AfterViewInit, OnDestroy, OnInit {
     private _ngZone;
     /** Whether we're currently rendering inside a browser. */
     private _isBrowser;
-    private _youtubeContainer;
-    private _destroyed;
+    private readonly _youtubeContainer;
+    private readonly _destroyed;
     private _player;
     private _existingApiReadyCallback;
     private _pendingPlayerState;
-    private _playerChanges;
+    private readonly _playerChanges;
     /** YouTube Video ID to view */
     get videoId(): string | undefined;
     set videoId(videoId: string | undefined);
-    private _videoId;
+    private readonly _videoId;
     /** Height of video player */
     get height(): number | undefined;
     set height(height: number | undefined);
-    private _height;
+    private readonly _height;
     /** Width of video player */
     get width(): number | undefined;
     set width(width: number | undefined);
-    private _width;
+    private readonly _width;
     /** The moment when the player is supposed to start playing */
     set startSeconds(startSeconds: number | undefined);
-    private _startSeconds;
+    private readonly _startSeconds;
     /** The moment when the player is supposed to stop playing */
     set endSeconds(endSeconds: number | undefined);
-    private _endSeconds;
+    private readonly _endSeconds;
     /** The suggested quality of the player */
     set suggestedQuality(suggestedQuality: YT.SuggestedVideoQuality | undefined);
-    private _suggestedQuality;
+    private readonly _suggestedQuality;
     /**
      * Extra parameters used to configure the player. See:
      * https://developers.google.com/youtube/player_parameters.html?playerVersion=HTML5#Parameters
@@ -66,12 +66,12 @@ export declare class YouTubePlayer implements AfterViewInit, OnDestroy, OnInit {
      */
     showBeforeIframeApiLoads: boolean | undefined;
     /** Outputs are direct proxies from the player itself. */
-    ready: Observable<YT.PlayerEvent>;
-    stateChange: Observable<YT.OnStateChangeEvent>;
-    error: Observable<YT.OnErrorEvent>;
-    apiChange: Observable<YT.PlayerEvent>;
-    playbackQualityChange: Observable<YT.OnPlaybackQualityChangeEvent>;
-    playbackRateChange: Observable<YT.OnPlaybackRateChangeEvent>;
+    readonly ready: Observable<YT.PlayerEvent>;
+    readonly stateChange: Observable<YT.OnStateChangeEvent>;
+    readonly error: Observable<YT.OnErrorEvent>;
+    readonly apiChange: Observable<YT.PlayerEvent>;
+    readonly playbackQualityChange: Observable<YT.OnPlaybackQualityChangeEvent>;
+    readonly playbackRateChange: Observable<YT.OnPlaybackRateChangeEvent>;
     /** The element that will be replaced by the iframe. */
     youtubeContainer: ElementRef<HTMLElement>;
     constructor(_ngZone: NgZone, platformId: Object);
