@@ -1,6 +1,6 @@
 {
   "name": "@angular/youtube-player",
-  "version": "12.2.0-sha-7a97590ae",
+  "version": "12.2.0",
   "description": "Angular YouTube Player",
   "repository": {
     "type": "git",
@@ -26,9 +26,6 @@
     "rxjs": "^6.5.3 || ^7.0.0"
   },
   "sideEffects": false,
-  "publishConfig": {
-    "registry": "https://wombat-dressing-room.appspot.com"
-  },
   "ng-update": {},
   "main": "./bundles/youtube-player.umd.js",
   "fesm2015": "./fesm2015/youtube-player.js",
