@@ -76,11 +76,6 @@ export declare class YouTubePlayer implements AfterViewInit, OnDestroy, OnInit {
     youtubeContainer: ElementRef<HTMLElement>;
     constructor(_ngZone: NgZone, platformId: Object);
     ngOnInit(): void;
-    /**
-     * @deprecated No longer being used. To be removed.
-     * @breaking-change 11.0.0
-     */
-    createEventsBoundInZone(): YT.Events;
     ngAfterViewInit(): void;
     ngOnDestroy(): void;
     /** See https://developers.google.com/youtube/iframe_api_reference#playVideo */

@@ -462,13 +462,6 @@
             // After all of the subscriptions are set up, connect the observable.
             playerObs.connect();
         };
-        /**
-         * @deprecated No longer being used. To be removed.
-         * @breaking-change 11.0.0
-         */
-        YouTubePlayer.prototype.createEventsBoundInZone = function () {
-            return {};
-        };
         YouTubePlayer.prototype.ngAfterViewInit = function () {
             this._youtubeContainer.next(this.youtubeContainer.nativeElement);
         };
