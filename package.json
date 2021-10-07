@@ -27,10 +27,24 @@
   },
   "sideEffects": false,
   "ng-update": {},
-  "main": "./bundles/youtube-player.umd.js",
-  "fesm2015": "./fesm2015/youtube-player.js",
-  "esm2015": "./esm2015/index.js",
+  "fesm2020": "./fesm2020/youtube-player.mjs",
+  "fesm2015": "./fesm2015/youtube-player.mjs",
+  "esm2020": "./esm2020/index.mjs",
   "typings": "./index.d.ts",
-  "module": "./fesm2015/youtube-player.js",
-  "es2015": "./fesm2015/youtube-player.js"
+  "module": "./fesm2015/youtube-player.mjs",
+  "es2020": "./fesm2020/youtube-player.mjs",
+  "type": "module",
+  "exports": {
+    "./package.json": {
+      "default": "./package.json"
+    },
+    ".": {
+      "types": "./index.d.ts",
+      "esm2020": "./esm2020/index.mjs",
+      "es2020": "./fesm2020/youtube-player.mjs",
+      "es2015": "./fesm2015/youtube-player.mjs",
+      "node": "./fesm2015/youtube-player.mjs",
+      "default": "./fesm2020/youtube-player.mjs"
+    }
+  }
 }

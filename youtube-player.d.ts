@@ -1,3 +1,4 @@
+/// <reference types="youtube" />
 /**
  * @license
  * Copyright Google LLC All Rights Reserved.
@@ -5,9 +6,9 @@
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license
  */
-/// <reference types="youtube" />
 import { AfterViewInit, ElementRef, NgZone, OnDestroy, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
+import * as i0 from "@angular/core";
 declare global {
     interface Window {
         YT: typeof YT | undefined;
@@ -124,4 +125,6 @@ export declare class YouTubePlayer implements AfterViewInit, OnDestroy, OnInit {
     private _initializePlayer;
     /** Gets an observable that adds an event listener to the player when a user subscribes to it. */
     private _getLazyEmitter;
+    static ɵfac: i0.ɵɵFactoryDeclaration<YouTubePlayer, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<YouTubePlayer, "youtube-player", never, { "videoId": "videoId"; "height": "height"; "width": "width"; "startSeconds": "startSeconds"; "endSeconds": "endSeconds"; "suggestedQuality": "suggestedQuality"; "playerVars": "playerVars"; "showBeforeIframeApiLoads": "showBeforeIframeApiLoads"; }, { "ready": "ready"; "stateChange": "stateChange"; "error": "error"; "apiChange": "apiChange"; "playbackQualityChange": "playbackQualityChange"; "playbackRateChange": "playbackRateChange"; }, never, never>;
 }
