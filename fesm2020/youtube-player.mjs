@@ -1,15 +1,10 @@
-import { Component, ChangeDetectionStrategy, ViewEncapsulation, NgZone, Inject, PLATFORM_ID, Input, Output, ViewChild, NgModule } from '@angular/core';
+import * as i0 from '@angular/core';
+import { PLATFORM_ID, Component, ChangeDetectionStrategy, ViewEncapsulation, Inject, Input, Output, ViewChild, NgModule } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { Subject, BehaviorSubject, of, combineLatest, pipe, Observable, fromEventPattern, merge } from 'rxjs';
 import { take, startWith, combineLatest as combineLatest$1, skipWhile, map, scan, distinctUntilChanged, tap, mergeMap, takeUntil, publish, switchMap, withLatestFrom, filter } from 'rxjs/operators';
 
-/**
- * @license
- * Copyright Google LLC All Rights Reserved.
- *
- * Use of this source code is governed by an MIT-style license that can be
- * found in the LICENSE file at https://angular.io/license
- */
+/// <reference types="youtube" />
 const DEFAULT_PLAYER_WIDTH = 640;
 const DEFAULT_PLAYER_HEIGHT = 390;
 /**
@@ -348,7 +343,7 @@ class YouTubePlayer {
                         player.removeEventListener(name, listener);
                     }
                 }
-                catch (_a) { }
+                catch { }
             }) : of();
         }), 
         // By default we run all the API interactions outside the zone
@@ -362,36 +357,52 @@ class YouTubePlayer {
         takeUntil(this._destroyed));
     }
 }
-YouTubePlayer.decorators = [
-    { type: Component, args: [{
-                selector: 'youtube-player',
-                changeDetection: ChangeDetectionStrategy.OnPush,
-                encapsulation: ViewEncapsulation.None,
-                // This div is *replaced* by the YouTube player embed.
-                template: '<div #youtubeContainer></div>'
-            },] }
-];
-YouTubePlayer.ctorParameters = () => [
-    { type: NgZone },
-    { type: Object, decorators: [{ type: Inject, args: [PLATFORM_ID,] }] }
-];
-YouTubePlayer.propDecorators = {
-    videoId: [{ type: Input }],
-    height: [{ type: Input }],
-    width: [{ type: Input }],
-    startSeconds: [{ type: Input }],
-    endSeconds: [{ type: Input }],
-    suggestedQuality: [{ type: Input }],
-    playerVars: [{ type: Input }],
-    showBeforeIframeApiLoads: [{ type: Input }],
-    ready: [{ type: Output }],
-    stateChange: [{ type: Output }],
-    error: [{ type: Output }],
-    apiChange: [{ type: Output }],
-    playbackQualityChange: [{ type: Output }],
-    playbackRateChange: [{ type: Output }],
-    youtubeContainer: [{ type: ViewChild, args: ['youtubeContainer',] }]
-};
+YouTubePlayer.ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "13.0.0-next.15", ngImport: i0, type: YouTubePlayer, deps: [{ token: i0.NgZone }, { token: PLATFORM_ID }], target: i0.ɵɵFactoryTarget.Component });
+YouTubePlayer.ɵcmp = i0.ɵɵngDeclareComponent({ minVersion: "12.0.0", version: "13.0.0-next.15", type: YouTubePlayer, selector: "youtube-player", inputs: { videoId: "videoId", height: "height", width: "width", startSeconds: "startSeconds", endSeconds: "endSeconds", suggestedQuality: "suggestedQuality", playerVars: "playerVars", showBeforeIframeApiLoads: "showBeforeIframeApiLoads" }, outputs: { ready: "ready", stateChange: "stateChange", error: "error", apiChange: "apiChange", playbackQualityChange: "playbackQualityChange", playbackRateChange: "playbackRateChange" }, viewQueries: [{ propertyName: "youtubeContainer", first: true, predicate: ["youtubeContainer"], descendants: true }], ngImport: i0, template: '<div #youtubeContainer></div>', isInline: true, changeDetection: i0.ChangeDetectionStrategy.OnPush, encapsulation: i0.ViewEncapsulation.None });
+i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "13.0.0-next.15", ngImport: i0, type: YouTubePlayer, decorators: [{
+            type: Component,
+            args: [{
+                    selector: 'youtube-player',
+                    changeDetection: ChangeDetectionStrategy.OnPush,
+                    encapsulation: ViewEncapsulation.None,
+                    // This div is *replaced* by the YouTube player embed.
+                    template: '<div #youtubeContainer></div>',
+                }]
+        }], ctorParameters: function () { return [{ type: i0.NgZone }, { type: Object, decorators: [{
+                    type: Inject,
+                    args: [PLATFORM_ID]
+                }] }]; }, propDecorators: { videoId: [{
+                type: Input
+            }], height: [{
+                type: Input
+            }], width: [{
+                type: Input
+            }], startSeconds: [{
+                type: Input
+            }], endSeconds: [{
+                type: Input
+            }], suggestedQuality: [{
+                type: Input
+            }], playerVars: [{
+                type: Input
+            }], showBeforeIframeApiLoads: [{
+                type: Input
+            }], ready: [{
+                type: Output
+            }], stateChange: [{
+                type: Output
+            }], error: [{
+                type: Output
+            }], apiChange: [{
+                type: Output
+            }], playbackQualityChange: [{
+                type: Output
+            }], playbackRateChange: [{
+                type: Output
+            }], youtubeContainer: [{
+                type: ViewChild,
+                args: ['youtubeContainer']
+            }] } });
 /** Listens to changes to the given width and height and sets it on the player. */
 function bindSizeToPlayer(playerObs, widthObs, heightObs) {
     return combineLatest([playerObs, widthObs, heightObs])
@@ -502,8 +513,11 @@ function bindCueVideoCall(playerObs, videoIdObs, startSecondsObs, endSecondsObs,
             return;
         }
         player.videoId = videoId;
-        player.cueVideoById(Object.assign({ videoId,
-            suggestedQuality }, cueOptions));
+        player.cueVideoById({
+            videoId,
+            suggestedQuality,
+            ...cueOptions,
+        });
     });
 }
 function hasPlayerStarted(player) {
@@ -528,12 +542,16 @@ function filterOnOther(otherObs, filterFn) {
 const COMPONENTS = [YouTubePlayer];
 class YouTubePlayerModule {
 }
-YouTubePlayerModule.decorators = [
-    { type: NgModule, args: [{
-                declarations: COMPONENTS,
-                exports: COMPONENTS,
-            },] }
-];
+YouTubePlayerModule.ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "13.0.0-next.15", ngImport: i0, type: YouTubePlayerModule, deps: [], target: i0.ɵɵFactoryTarget.NgModule });
+YouTubePlayerModule.ɵmod = i0.ɵɵngDeclareNgModule({ minVersion: "12.0.0", version: "13.0.0-next.15", ngImport: i0, type: YouTubePlayerModule, declarations: [YouTubePlayer], exports: [YouTubePlayer] });
+YouTubePlayerModule.ɵinj = i0.ɵɵngDeclareInjector({ minVersion: "12.0.0", version: "13.0.0-next.15", ngImport: i0, type: YouTubePlayerModule });
+i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "13.0.0-next.15", ngImport: i0, type: YouTubePlayerModule, decorators: [{
+            type: NgModule,
+            args: [{
+                    declarations: COMPONENTS,
+                    exports: COMPONENTS,
+                }]
+        }] });
 
 /**
  * @license
@@ -548,4 +566,4 @@ YouTubePlayerModule.decorators = [
  */
 
 export { YouTubePlayer, YouTubePlayerModule };
-//# sourceMappingURL=youtube-player.js.map
+//# sourceMappingURL=youtube-player.mjs.map
