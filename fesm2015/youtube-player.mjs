@@ -35,17 +35,23 @@ class YouTubePlayer {
         this._isBrowser = isPlatformBrowser(platformId);
     }
     /** YouTube Video ID to view */
-    get videoId() { return this._videoId.value; }
+    get videoId() {
+        return this._videoId.value;
+    }
     set videoId(videoId) {
         this._videoId.next(videoId);
     }
     /** Height of video player */
-    get height() { return this._height.value; }
+    get height() {
+        return this._height.value;
+    }
     set height(height) {
         this._height.next(height || DEFAULT_PLAYER_HEIGHT);
     }
     /** Width of video player */
-    get width() { return this._width.value; }
+    get width() {
+        return this._width.value;
+    }
     set width(width) {
         this._width.next(width || DEFAULT_PLAYER_WIDTH);
     }
@@ -65,7 +71,9 @@ class YouTubePlayer {
      * Extra parameters used to configure the player. See:
      * https://developers.google.com/youtube/player_parameters.html?playerVersion=HTML5#Parameters
      */
-    get playerVars() { return this._playerVars.value; }
+    get playerVars() {
+        return this._playerVars.value;
+    }
     set playerVars(playerVars) {
         this._playerVars.next(playerVars);
     }
@@ -332,26 +340,28 @@ class YouTubePlayer {
         // Switch to the bound event. `switchMap` ensures that the old event is removed when the
         // player is changed. If there's no player, return an observable that never emits.
         switchMap(player => {
-            return player ? fromEventPattern((listener) => {
-                player.addEventListener(name, listener);
-            }, (listener) => {
-                // The API seems to throw when we try to unbind from a destroyed player and it doesn't
-                // expose whether the player has been destroyed so we have to wrap it in a try/catch to
-                // prevent the entire stream from erroring out.
-                try {
-                    if (player.removeEventListener) {
-                        player.removeEventListener(name, listener);
+            return player
+                ? fromEventPattern((listener) => {
+                    player.addEventListener(name, listener);
+                }, (listener) => {
+                    // The API seems to throw when we try to unbind from a destroyed player and it doesn't
+                    // expose whether the player has been destroyed so we have to wrap it in a try/catch to
+                    // prevent the entire stream from erroring out.
+                    try {
+                        if (player.removeEventListener) {
+                            player.removeEventListener(name, listener);
+                        }
                     }
-                }
-                catch (_a) { }
-            }) : of();
+                    catch (_a) { }
+                })
+                : of();
         }), 
         // By default we run all the API interactions outside the zone
         // so we have to bring the events back in manually when they emit.
         (source) => new Observable(observer => source.subscribe({
             next: value => this._ngZone.run(() => observer.next(value)),
             error: error => observer.error(error),
-            complete: () => observer.complete()
+            complete: () => observer.complete(),
         })), 
         // Ensures that everything is cleared out on destroy.
         takeUntil(this._destroyed));
@@ -407,15 +417,11 @@ i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "13.0.0-next.15",
             }] } });
 /** Listens to changes to the given width and height and sets it on the player. */
 function bindSizeToPlayer(playerObs, widthObs, heightObs) {
-    return combineLatest([playerObs, widthObs, heightObs])
-        .subscribe(([player, width, height]) => player && player.setSize(width, height));
+    return combineLatest([playerObs, widthObs, heightObs]).subscribe(([player, width, height]) => player && player.setSize(width, height));
 }
 /** Listens to changes from the suggested quality and sets it on the given player. */
 function bindSuggestedQualityToPlayer(playerObs, suggestedQualityObs) {
-    return combineLatest([
-        playerObs,
-        suggestedQualityObs
-    ]).subscribe(([player, suggestedQuality]) => player && suggestedQuality && player.setPlaybackQuality(suggestedQuality));
+    return combineLatest([playerObs, suggestedQualityObs]).subscribe(([player, suggestedQuality]) => player && suggestedQuality && player.setPlaybackQuality(suggestedQuality));
 }
 /**
  * Returns an observable that emits the loaded player once it's ready. Certain properties/methods
@@ -458,10 +464,9 @@ function createPlayerObservable(youtubeContainer, videoIdObs, iframeApiAvailable
     const playerOptions = combineLatest([videoIdObs, playerVarsObs]).pipe(withLatestFrom(combineLatest([widthObs, heightObs])), map(([constructorOptions, sizeOptions]) => {
         const [videoId, playerVars] = constructorOptions;
         const [width, height] = sizeOptions;
-        return videoId ? ({ videoId, playerVars, width, height }) : undefined;
+        return videoId ? { videoId, playerVars, width, height } : undefined;
     }));
-    return combineLatest([youtubeContainer, playerOptions, of(ngZone)])
-        .pipe(skipUntilRememberLatest(iframeApiAvailableObs), scan(syncPlayerState, undefined), distinctUntilChanged());
+    return combineLatest([youtubeContainer, playerOptions, of(ngZone)]).pipe(skipUntilRememberLatest(iframeApiAvailableObs), scan(syncPlayerState, undefined), distinctUntilChanged());
 }
 /** Skips the given observable until the other observable emits true, then emit the latest. */
 function skipUntilRememberLatest(notifier) {
@@ -496,15 +501,12 @@ function syncPlayerState(player, [container, videoOptions, ngZone]) {
  * start/end seconds.
  */
 function bindCueVideoCall(playerObs, videoIdObs, startSecondsObs, endSecondsObs, suggestedQualityObs, destroyed) {
-    const cueOptionsObs = combineLatest([startSecondsObs, endSecondsObs])
-        .pipe(map(([startSeconds, endSeconds]) => ({ startSeconds, endSeconds })));
+    const cueOptionsObs = combineLatest([startSecondsObs, endSecondsObs]).pipe(map(([startSeconds, endSeconds]) => ({ startSeconds, endSeconds })));
     // Only respond to changes in cue options if the player is not running.
-    const filteredCueOptions = cueOptionsObs
-        .pipe(filterOnOther(playerObs, player => !!player && !hasPlayerStarted(player)));
+    const filteredCueOptions = cueOptionsObs.pipe(filterOnOther(playerObs, player => !!player && !hasPlayerStarted(player)));
     // If the video id changed, there's no reason to run 'cue' unless the player
     // was initialized with a different video id.
-    const changedVideoId = videoIdObs
-        .pipe(filterOnOther(playerObs, (player, videoId) => !!player && player.videoId !== videoId));
+    const changedVideoId = videoIdObs.pipe(filterOnOther(playerObs, (player, videoId) => !!player && player.videoId !== videoId));
     // If the player changed, there's no reason to run 'cue' unless there are cue options.
     const changedPlayer = playerObs.pipe(filterOnOther(combineLatest([videoIdObs, cueOptionsObs]), ([videoId, cueOptions], player) => !!player &&
         (videoId != player.videoId || !!cueOptions.startSeconds || !!cueOptions.endSeconds)));
