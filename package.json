@@ -29,8 +29,8 @@
   "ng-update": {},
   "fesm2020": "./fesm2020/youtube-player.mjs",
   "fesm2015": "./fesm2015/youtube-player.mjs",
-  "esm2020": "./esm2020/index.mjs",
-  "typings": "./index.d.ts",
+  "esm2020": "./esm2020/youtube-player_public_index.mjs",
+  "typings": "./youtube-player_public_index.d.ts",
   "module": "./fesm2015/youtube-player.mjs",
   "es2020": "./fesm2020/youtube-player.mjs",
   "type": "module",
@@ -39,8 +39,8 @@
       "default": "./package.json"
     },
     ".": {
-      "types": "./index.d.ts",
-      "esm2020": "./esm2020/index.mjs",
+      "types": "./youtube-player_public_index.d.ts",
+      "esm2020": "./esm2020/youtube-player_public_index.mjs",
       "es2020": "./fesm2020/youtube-player.mjs",
       "es2015": "./fesm2015/youtube-player.mjs",
       "node": "./fesm2015/youtube-player.mjs",
