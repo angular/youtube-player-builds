@@ -63,6 +63,10 @@ export declare class YouTubePlayer implements AfterViewInit, OnDestroy, OnInit {
     get playerVars(): YT.PlayerVars | undefined;
     set playerVars(playerVars: YT.PlayerVars | undefined);
     private _playerVars;
+    /** Whether cookies inside the player have been disabled. */
+    get disableCookies(): boolean;
+    set disableCookies(value: unknown);
+    private readonly _disableCookies;
     /**
      * Whether the iframe will attempt to load regardless of the status of the api on the
      * page. Set this to true if you don't want the `onYouTubeIframeAPIReady` field to be
@@ -129,7 +133,7 @@ export declare class YouTubePlayer implements AfterViewInit, OnDestroy, OnInit {
     /** Gets an observable that adds an event listener to the player when a user subscribes to it. */
     private _getLazyEmitter;
     static ɵfac: i0.ɵɵFactoryDeclaration<YouTubePlayer, never>;
-    static ɵcmp: i0.ɵɵComponentDeclaration<YouTubePlayer, "youtube-player", never, { "videoId": "videoId"; "height": "height"; "width": "width"; "startSeconds": "startSeconds"; "endSeconds": "endSeconds"; "suggestedQuality": "suggestedQuality"; "playerVars": "playerVars"; "showBeforeIframeApiLoads": "showBeforeIframeApiLoads"; }, { "ready": "ready"; "stateChange": "stateChange"; "error": "error"; "apiChange": "apiChange"; "playbackQualityChange": "playbackQualityChange"; "playbackRateChange": "playbackRateChange"; }, never, never, false>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<YouTubePlayer, "youtube-player", never, { "videoId": "videoId"; "height": "height"; "width": "width"; "startSeconds": "startSeconds"; "endSeconds": "endSeconds"; "suggestedQuality": "suggestedQuality"; "playerVars": "playerVars"; "disableCookies": "disableCookies"; "showBeforeIframeApiLoads": "showBeforeIframeApiLoads"; }, { "ready": "ready"; "stateChange": "stateChange"; "error": "error"; "apiChange": "apiChange"; "playbackQualityChange": "playbackQualityChange"; "playbackRateChange": "playbackRateChange"; }, never, never, false>;
 }
 
 export declare class YouTubePlayerModule {
