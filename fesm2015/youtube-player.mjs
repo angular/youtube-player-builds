@@ -13,28 +13,6 @@ const DEFAULT_PLAYER_HEIGHT = 390;
  * @see https://developers.google.com/youtube/iframe_api_reference
  */
 class YouTubePlayer {
-    constructor(_ngZone, platformId) {
-        this._ngZone = _ngZone;
-        this._youtubeContainer = new Subject();
-        this._destroyed = new Subject();
-        this._playerChanges = new BehaviorSubject(undefined);
-        this._videoId = new BehaviorSubject(undefined);
-        this._height = new BehaviorSubject(DEFAULT_PLAYER_HEIGHT);
-        this._width = new BehaviorSubject(DEFAULT_PLAYER_WIDTH);
-        this._startSeconds = new BehaviorSubject(undefined);
-        this._endSeconds = new BehaviorSubject(undefined);
-        this._suggestedQuality = new BehaviorSubject(undefined);
-        this._playerVars = new BehaviorSubject(undefined);
-        this._disableCookies = new BehaviorSubject(false);
-        /** Outputs are direct proxies from the player itself. */
-        this.ready = this._getLazyEmitter('onReady');
-        this.stateChange = this._getLazyEmitter('onStateChange');
-        this.error = this._getLazyEmitter('onError');
-        this.apiChange = this._getLazyEmitter('onApiChange');
-        this.playbackQualityChange = this._getLazyEmitter('onPlaybackQualityChange');
-        this.playbackRateChange = this._getLazyEmitter('onPlaybackRateChange');
-        this._isBrowser = isPlatformBrowser(platformId);
-    }
     /** YouTube Video ID to view */
     get videoId() {
         return this._videoId.value;
@@ -84,6 +62,28 @@ class YouTubePlayer {
     }
     set disableCookies(value) {
         this._disableCookies.next(!!value);
+    }
+    constructor(_ngZone, platformId) {
+        this._ngZone = _ngZone;
+        this._youtubeContainer = new Subject();
+        this._destroyed = new Subject();
+        this._playerChanges = new BehaviorSubject(undefined);
+        this._videoId = new BehaviorSubject(undefined);
+        this._height = new BehaviorSubject(DEFAULT_PLAYER_HEIGHT);
+        this._width = new BehaviorSubject(DEFAULT_PLAYER_WIDTH);
+        this._startSeconds = new BehaviorSubject(undefined);
+        this._endSeconds = new BehaviorSubject(undefined);
+        this._suggestedQuality = new BehaviorSubject(undefined);
+        this._playerVars = new BehaviorSubject(undefined);
+        this._disableCookies = new BehaviorSubject(false);
+        /** Outputs are direct proxies from the player itself. */
+        this.ready = this._getLazyEmitter('onReady');
+        this.stateChange = this._getLazyEmitter('onStateChange');
+        this.error = this._getLazyEmitter('onError');
+        this.apiChange = this._getLazyEmitter('onApiChange');
+        this.playbackQualityChange = this._getLazyEmitter('onPlaybackQualityChange');
+        this.playbackRateChange = this._getLazyEmitter('onPlaybackRateChange');
+        this._isBrowser = isPlatformBrowser(platformId);
     }
     ngOnInit() {
         // Don't do anything if we're not in a browser environment.
@@ -376,9 +376,9 @@ class YouTubePlayer {
         takeUntil(this._destroyed));
     }
 }
-YouTubePlayer.ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "15.1.0-next.3", ngImport: i0, type: YouTubePlayer, deps: [{ token: i0.NgZone }, { token: PLATFORM_ID }], target: i0.ɵɵFactoryTarget.Component });
-YouTubePlayer.ɵcmp = i0.ɵɵngDeclareComponent({ minVersion: "14.0.0", version: "15.1.0-next.3", type: YouTubePlayer, selector: "youtube-player", inputs: { videoId: "videoId", height: "height", width: "width", startSeconds: "startSeconds", endSeconds: "endSeconds", suggestedQuality: "suggestedQuality", playerVars: "playerVars", disableCookies: "disableCookies", showBeforeIframeApiLoads: "showBeforeIframeApiLoads" }, outputs: { ready: "ready", stateChange: "stateChange", error: "error", apiChange: "apiChange", playbackQualityChange: "playbackQualityChange", playbackRateChange: "playbackRateChange" }, viewQueries: [{ propertyName: "youtubeContainer", first: true, predicate: ["youtubeContainer"], descendants: true }], ngImport: i0, template: '<div #youtubeContainer></div>', isInline: true, changeDetection: i0.ChangeDetectionStrategy.OnPush, encapsulation: i0.ViewEncapsulation.None });
-i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "15.1.0-next.3", ngImport: i0, type: YouTubePlayer, decorators: [{
+YouTubePlayer.ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "15.1.0-rc.0", ngImport: i0, type: YouTubePlayer, deps: [{ token: i0.NgZone }, { token: PLATFORM_ID }], target: i0.ɵɵFactoryTarget.Component });
+YouTubePlayer.ɵcmp = i0.ɵɵngDeclareComponent({ minVersion: "14.0.0", version: "15.1.0-rc.0", type: YouTubePlayer, selector: "youtube-player", inputs: { videoId: "videoId", height: "height", width: "width", startSeconds: "startSeconds", endSeconds: "endSeconds", suggestedQuality: "suggestedQuality", playerVars: "playerVars", disableCookies: "disableCookies", showBeforeIframeApiLoads: "showBeforeIframeApiLoads" }, outputs: { ready: "ready", stateChange: "stateChange", error: "error", apiChange: "apiChange", playbackQualityChange: "playbackQualityChange", playbackRateChange: "playbackRateChange" }, viewQueries: [{ propertyName: "youtubeContainer", first: true, predicate: ["youtubeContainer"], descendants: true }], ngImport: i0, template: '<div #youtubeContainer></div>', isInline: true, changeDetection: i0.ChangeDetectionStrategy.OnPush, encapsulation: i0.ViewEncapsulation.None });
+i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "15.1.0-rc.0", ngImport: i0, type: YouTubePlayer, decorators: [{
             type: Component,
             args: [{
                     selector: 'youtube-player',
@@ -557,10 +557,10 @@ function filterOnOther(otherObs, filterFn) {
 const COMPONENTS = [YouTubePlayer];
 class YouTubePlayerModule {
 }
-YouTubePlayerModule.ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "15.1.0-next.3", ngImport: i0, type: YouTubePlayerModule, deps: [], target: i0.ɵɵFactoryTarget.NgModule });
-YouTubePlayerModule.ɵmod = i0.ɵɵngDeclareNgModule({ minVersion: "14.0.0", version: "15.1.0-next.3", ngImport: i0, type: YouTubePlayerModule, declarations: [YouTubePlayer], exports: [YouTubePlayer] });
-YouTubePlayerModule.ɵinj = i0.ɵɵngDeclareInjector({ minVersion: "12.0.0", version: "15.1.0-next.3", ngImport: i0, type: YouTubePlayerModule });
-i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "15.1.0-next.3", ngImport: i0, type: YouTubePlayerModule, decorators: [{
+YouTubePlayerModule.ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "15.1.0-rc.0", ngImport: i0, type: YouTubePlayerModule, deps: [], target: i0.ɵɵFactoryTarget.NgModule });
+YouTubePlayerModule.ɵmod = i0.ɵɵngDeclareNgModule({ minVersion: "14.0.0", version: "15.1.0-rc.0", ngImport: i0, type: YouTubePlayerModule, declarations: [YouTubePlayer], exports: [YouTubePlayer] });
+YouTubePlayerModule.ɵinj = i0.ɵɵngDeclareInjector({ minVersion: "12.0.0", version: "15.1.0-rc.0", ngImport: i0, type: YouTubePlayerModule });
+i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "15.1.0-rc.0", ngImport: i0, type: YouTubePlayerModule, decorators: [{
             type: NgModule,
             args: [{
                     declarations: COMPONENTS,
