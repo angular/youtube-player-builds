@@ -27,12 +27,8 @@
   },
   "sideEffects": false,
   "ng-update": {},
-  "fesm2020": "./fesm2020/youtube-player.mjs",
-  "fesm2015": "./fesm2015/youtube-player.mjs",
-  "esm2020": "./esm2020/youtube-player_public_index.mjs",
+  "module": "./fesm2022/youtube-player.mjs",
   "typings": "./index.d.ts",
-  "module": "./fesm2015/youtube-player.mjs",
-  "es2020": "./fesm2020/youtube-player.mjs",
   "type": "module",
   "exports": {
     "./package.json": {
@@ -40,11 +36,9 @@
     },
     ".": {
       "types": "./index.d.ts",
-      "esm2020": "./esm2020/youtube-player_public_index.mjs",
-      "es2020": "./fesm2020/youtube-player.mjs",
-      "es2015": "./fesm2015/youtube-player.mjs",
-      "node": "./fesm2015/youtube-player.mjs",
-      "default": "./fesm2020/youtube-player.mjs"
+      "esm2022": "./esm2022/youtube-player_public_index.mjs",
+      "esm": "./esm2022/youtube-player_public_index.mjs",
+      "default": "./fesm2022/youtube-player.mjs"
     }
   }
 }

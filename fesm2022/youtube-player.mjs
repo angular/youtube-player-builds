@@ -361,7 +361,7 @@ class YouTubePlayer {
                             player.removeEventListener(name, listener);
                         }
                     }
-                    catch (_a) { }
+                    catch { }
                 })
                 : of();
         }), 
@@ -375,9 +375,9 @@ class YouTubePlayer {
         // Ensures that everything is cleared out on destroy.
         takeUntil(this._destroyed));
     }
+    static { this.ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "16.0.0-next.7", ngImport: i0, type: YouTubePlayer, deps: [{ token: i0.NgZone }, { token: PLATFORM_ID }], target: i0.ɵɵFactoryTarget.Component }); }
+    static { this.ɵcmp = i0.ɵɵngDeclareComponent({ minVersion: "14.0.0", version: "16.0.0-next.7", type: YouTubePlayer, selector: "youtube-player", inputs: { videoId: "videoId", height: "height", width: "width", startSeconds: "startSeconds", endSeconds: "endSeconds", suggestedQuality: "suggestedQuality", playerVars: "playerVars", disableCookies: "disableCookies", showBeforeIframeApiLoads: "showBeforeIframeApiLoads" }, outputs: { ready: "ready", stateChange: "stateChange", error: "error", apiChange: "apiChange", playbackQualityChange: "playbackQualityChange", playbackRateChange: "playbackRateChange" }, viewQueries: [{ propertyName: "youtubeContainer", first: true, predicate: ["youtubeContainer"], descendants: true }], ngImport: i0, template: '<div #youtubeContainer></div>', isInline: true, changeDetection: i0.ChangeDetectionStrategy.OnPush, encapsulation: i0.ViewEncapsulation.None }); }
 }
-YouTubePlayer.ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "16.0.0-next.7", ngImport: i0, type: YouTubePlayer, deps: [{ token: i0.NgZone }, { token: PLATFORM_ID }], target: i0.ɵɵFactoryTarget.Component });
-YouTubePlayer.ɵcmp = i0.ɵɵngDeclareComponent({ minVersion: "14.0.0", version: "16.0.0-next.7", type: YouTubePlayer, selector: "youtube-player", inputs: { videoId: "videoId", height: "height", width: "width", startSeconds: "startSeconds", endSeconds: "endSeconds", suggestedQuality: "suggestedQuality", playerVars: "playerVars", disableCookies: "disableCookies", showBeforeIframeApiLoads: "showBeforeIframeApiLoads" }, outputs: { ready: "ready", stateChange: "stateChange", error: "error", apiChange: "apiChange", playbackQualityChange: "playbackQualityChange", playbackRateChange: "playbackRateChange" }, viewQueries: [{ propertyName: "youtubeContainer", first: true, predicate: ["youtubeContainer"], descendants: true }], ngImport: i0, template: '<div #youtubeContainer></div>', isInline: true, changeDetection: i0.ChangeDetectionStrategy.OnPush, encapsulation: i0.ViewEncapsulation.None });
 i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "16.0.0-next.7", ngImport: i0, type: YouTubePlayer, decorators: [{
             type: Component,
             args: [{
@@ -387,12 +387,10 @@ i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "16.0.0-next.7", 
                     // This div is *replaced* by the YouTube player embed.
                     template: '<div #youtubeContainer></div>',
                 }]
-        }], ctorParameters: function () {
-        return [{ type: i0.NgZone }, { type: Object, decorators: [{
-                        type: Inject,
-                        args: [PLATFORM_ID]
-                    }] }];
-    }, propDecorators: { videoId: [{
+        }], ctorParameters: function () { return [{ type: i0.NgZone }, { type: Object, decorators: [{
+                    type: Inject,
+                    args: [PLATFORM_ID]
+                }] }]; }, propDecorators: { videoId: [{
                 type: Input
             }], height: [{
                 type: Input
@@ -531,8 +529,11 @@ function bindCueVideoCall(playerObs, videoIdObs, startSecondsObs, endSecondsObs,
             return;
         }
         player.videoId = videoId;
-        player.cueVideoById(Object.assign({ videoId,
-            suggestedQuality }, cueOptions));
+        player.cueVideoById({
+            videoId,
+            suggestedQuality,
+            ...cueOptions,
+        });
     });
 }
 function hasPlayerStarted(player) {
@@ -549,10 +550,10 @@ function filterOnOther(otherObs, filterFn) {
 
 const COMPONENTS = [YouTubePlayer];
 class YouTubePlayerModule {
+    static { this.ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "16.0.0-next.7", ngImport: i0, type: YouTubePlayerModule, deps: [], target: i0.ɵɵFactoryTarget.NgModule }); }
+    static { this.ɵmod = i0.ɵɵngDeclareNgModule({ minVersion: "14.0.0", version: "16.0.0-next.7", ngImport: i0, type: YouTubePlayerModule, declarations: [YouTubePlayer], exports: [YouTubePlayer] }); }
+    static { this.ɵinj = i0.ɵɵngDeclareInjector({ minVersion: "12.0.0", version: "16.0.0-next.7", ngImport: i0, type: YouTubePlayerModule }); }
 }
-YouTubePlayerModule.ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "16.0.0-next.7", ngImport: i0, type: YouTubePlayerModule, deps: [], target: i0.ɵɵFactoryTarget.NgModule });
-YouTubePlayerModule.ɵmod = i0.ɵɵngDeclareNgModule({ minVersion: "14.0.0", version: "16.0.0-next.7", ngImport: i0, type: YouTubePlayerModule, declarations: [YouTubePlayer], exports: [YouTubePlayer] });
-YouTubePlayerModule.ɵinj = i0.ɵɵngDeclareInjector({ minVersion: "12.0.0", version: "16.0.0-next.7", ngImport: i0, type: YouTubePlayerModule });
 i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "16.0.0-next.7", ngImport: i0, type: YouTubePlayerModule, decorators: [{
             type: NgModule,
             args: [{
