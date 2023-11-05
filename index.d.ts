@@ -5,9 +5,8 @@ import { ElementRef } from '@angular/core';
 import * as i0 from '@angular/core';
 import { NgZone } from '@angular/core';
 import { Observable } from 'rxjs';
-import { OnChanges } from '@angular/core';
 import { OnDestroy } from '@angular/core';
-import { SimpleChanges } from '@angular/core';
+import { OnInit } from '@angular/core';
 
 declare const DEFAULT_PLAYER_HEIGHT = 390;
 
@@ -26,39 +25,48 @@ declare namespace i1 {
  * iframe API.
  * @see https://developers.google.com/youtube/iframe_api_reference
  */
-export declare class YouTubePlayer implements AfterViewInit, OnChanges, OnDestroy {
+export declare class YouTubePlayer implements AfterViewInit, OnDestroy, OnInit {
     private _ngZone;
     /** Whether we're currently rendering inside a browser. */
-    private readonly _isBrowser;
+    private _isBrowser;
+    private readonly _youtubeContainer;
+    private readonly _destroyed;
     private _player;
-    private _pendingPlayer;
     private _existingApiReadyCallback;
     private _pendingPlayerState;
-    private readonly _destroyed;
     private readonly _playerChanges;
     /** YouTube Video ID to view */
-    videoId: string | undefined;
+    get videoId(): string | undefined;
+    set videoId(videoId: string | undefined);
+    private readonly _videoId;
     /** Height of video player */
-    get height(): number;
+    get height(): number | undefined;
     set height(height: number | undefined);
-    private _height;
+    private readonly _height;
     /** Width of video player */
-    get width(): number;
+    get width(): number | undefined;
     set width(width: number | undefined);
-    private _width;
+    private readonly _width;
     /** The moment when the player is supposed to start playing */
-    startSeconds: number | undefined;
+    set startSeconds(startSeconds: number | undefined);
+    private readonly _startSeconds;
     /** The moment when the player is supposed to stop playing */
-    endSeconds: number | undefined;
+    set endSeconds(endSeconds: number | undefined);
+    private readonly _endSeconds;
     /** The suggested quality of the player */
-    suggestedQuality: YT.SuggestedVideoQuality | undefined;
+    set suggestedQuality(suggestedQuality: YT.SuggestedVideoQuality | undefined);
+    private readonly _suggestedQuality;
     /**
      * Extra parameters used to configure the player. See:
      * https://developers.google.com/youtube/player_parameters.html?playerVersion=HTML5#Parameters
      */
-    playerVars: YT.PlayerVars | undefined;
+    get playerVars(): YT.PlayerVars | undefined;
+    set playerVars(playerVars: YT.PlayerVars | undefined);
+    private _playerVars;
     /** Whether cookies inside the player have been disabled. */
-    disableCookies: boolean;
+    get disableCookies(): boolean;
+    set disableCookies(value: unknown);
+    private readonly _disableCookies;
     /**
      * Whether the iframe will attempt to load regardless of the status of the api on the
      * page. Set this to true if you don't want the `onYouTubeIframeAPIReady` field to be
@@ -75,8 +83,8 @@ export declare class YouTubePlayer implements AfterViewInit, OnChanges, OnDestro
     /** The element that will be replaced by the iframe. */
     youtubeContainer: ElementRef<HTMLElement>;
     constructor(_ngZone: NgZone, platformId: Object);
+    ngOnInit(): void;
     ngAfterViewInit(): void;
-    ngOnChanges(changes: SimpleChanges): void;
     ngOnDestroy(): void;
     /** See https://developers.google.com/youtube/iframe_api_reference#playVideo */
     playVideo(): void;
@@ -120,21 +128,8 @@ export declare class YouTubePlayer implements AfterViewInit, OnChanges, OnDestro
     getVideoEmbedCode(): string;
     /** Gets an object that should be used to store the temporary API state. */
     private _getPendingState;
-    /**
-     * Determines whether a change in the component state
-     * requires the YouTube player to be recreated.
-     */
-    private _shouldRecreatePlayer;
-    /** Creates a new YouTube player and destroys the existing one. */
-    private _createPlayer;
-    /** Applies any state that changed before the player was initialized. */
-    private _applyPendingPlayerState;
-    /** Cues the player based on the current component state. */
-    private _cuePlayer;
-    /** Sets the player's size based on the current input values. */
-    private _setSize;
-    /** Sets the player's quality based on the current input values. */
-    private _setQuality;
+    /** Initializes a player from a temporary state. */
+    private _initializePlayer;
     /** Gets an observable that adds an event listener to the player when a user subscribes to it. */
     private _getLazyEmitter;
     static ɵfac: i0.ɵɵFactoryDeclaration<YouTubePlayer, never>;
