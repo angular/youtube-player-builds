@@ -138,12 +138,12 @@ export declare class YouTubePlayer implements AfterViewInit, OnChanges, OnDestro
     /** Gets an observable that adds an event listener to the player when a user subscribes to it. */
     private _getLazyEmitter;
     static ɵfac: i0.ɵɵFactoryDeclaration<YouTubePlayer, never>;
-    static ɵcmp: i0.ɵɵComponentDeclaration<YouTubePlayer, "youtube-player", never, { "videoId": { "alias": "videoId"; "required": false; }; "height": { "alias": "height"; "required": false; }; "width": { "alias": "width"; "required": false; }; "startSeconds": { "alias": "startSeconds"; "required": false; }; "endSeconds": { "alias": "endSeconds"; "required": false; }; "suggestedQuality": { "alias": "suggestedQuality"; "required": false; }; "playerVars": { "alias": "playerVars"; "required": false; }; "disableCookies": { "alias": "disableCookies"; "required": false; }; "showBeforeIframeApiLoads": { "alias": "showBeforeIframeApiLoads"; "required": false; }; }, { "ready": "ready"; "stateChange": "stateChange"; "error": "error"; "apiChange": "apiChange"; "playbackQualityChange": "playbackQualityChange"; "playbackRateChange": "playbackRateChange"; }, never, never, false, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<YouTubePlayer, "youtube-player", never, { "videoId": { "alias": "videoId"; "required": false; }; "height": { "alias": "height"; "required": false; }; "width": { "alias": "width"; "required": false; }; "startSeconds": { "alias": "startSeconds"; "required": false; }; "endSeconds": { "alias": "endSeconds"; "required": false; }; "suggestedQuality": { "alias": "suggestedQuality"; "required": false; }; "playerVars": { "alias": "playerVars"; "required": false; }; "disableCookies": { "alias": "disableCookies"; "required": false; }; "showBeforeIframeApiLoads": { "alias": "showBeforeIframeApiLoads"; "required": false; }; }, { "ready": "ready"; "stateChange": "stateChange"; "error": "error"; "apiChange": "apiChange"; "playbackQualityChange": "playbackQualityChange"; "playbackRateChange": "playbackRateChange"; }, never, never, true, never>;
 }
 
 export declare class YouTubePlayerModule {
     static ɵfac: i0.ɵɵFactoryDeclaration<YouTubePlayerModule, never>;
-    static ɵmod: i0.ɵɵNgModuleDeclaration<YouTubePlayerModule, [typeof i1.YouTubePlayer], never, [typeof i1.YouTubePlayer]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<YouTubePlayerModule, never, [typeof i1.YouTubePlayer], [typeof i1.YouTubePlayer]>;
     static ɵinj: i0.ɵɵInjectorDeclaration<YouTubePlayerModule>;
 }
 
