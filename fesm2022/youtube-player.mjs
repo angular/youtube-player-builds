@@ -1,12 +1,18 @@
 import * as i0 from '@angular/core';
-import { PLATFORM_ID, Component, ChangeDetectionStrategy, ViewEncapsulation, Inject, Input, Output, ViewChild, NgModule } from '@angular/core';
+import { InjectionToken, numberAttribute, inject, CSP_NONCE, PLATFORM_ID, booleanAttribute, Component, ChangeDetectionStrategy, ViewEncapsulation, Inject, Input, Output, ViewChild, NgModule } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { Subject, BehaviorSubject, fromEventPattern, of, Observable } from 'rxjs';
 import { switchMap, takeUntil } from 'rxjs/operators';
 
 /// <reference types="youtube" />
+/** Injection token used to configure the `YouTubePlayer`. */
+const YOUTUBE_PLAYER_CONFIG = new InjectionToken('YOUTUBE_PLAYER_CONFIG');
 const DEFAULT_PLAYER_WIDTH = 640;
 const DEFAULT_PLAYER_HEIGHT = 390;
+/** Coercion function for time values. */
+function coerceTime(value) {
+    return value == null ? value : numberAttribute(value, 0);
+}
 /**
  * Angular component that renders a YouTube player via the YouTube player
  * iframe API.
@@ -18,23 +24,30 @@ class YouTubePlayer {
         return this._height;
     }
     set height(height) {
-        this._height = height || DEFAULT_PLAYER_HEIGHT;
+        this._height = height == null || isNaN(height) ? DEFAULT_PLAYER_HEIGHT : height;
     }
     /** Width of video player */
     get width() {
         return this._width;
     }
     set width(width) {
-        this._width = width || DEFAULT_PLAYER_WIDTH;
+        this._width = width == null || isNaN(width) ? DEFAULT_PLAYER_WIDTH : width;
     }
     constructor(_ngZone, platformId) {
         this._ngZone = _ngZone;
         this._destroyed = new Subject();
         this._playerChanges = new BehaviorSubject(undefined);
+        this._nonce = inject(CSP_NONCE, { optional: true });
         this._height = DEFAULT_PLAYER_HEIGHT;
         this._width = DEFAULT_PLAYER_WIDTH;
         /** Whether cookies inside the player have been disabled. */
         this.disableCookies = false;
+        /**
+         * Whether the iframe will attempt to load regardless of the status of the api on the
+         * page. Set this to true if you don't want the `onYouTubeIframeAPIReady` field to be
+         * set on the global window.
+         */
+        this.showBeforeIframeApiLoads = false;
         /** Outputs are direct proxies from the player itself. */
         this.ready = this._getLazyEmitter('onReady');
         this.stateChange = this._getLazyEmitter('onStateChange');
@@ -42,6 +55,8 @@ class YouTubePlayer {
         this.apiChange = this._getLazyEmitter('onApiChange');
         this.playbackQualityChange = this._getLazyEmitter('onPlaybackQualityChange');
         this.playbackRateChange = this._getLazyEmitter('onPlaybackRateChange');
+        const config = inject(YOUTUBE_PLAYER_CONFIG, { optional: true });
+        this.loadApi = config?.loadApi ?? true;
         this._isBrowser = isPlatformBrowser(platformId);
     }
     ngAfterViewInit() {
@@ -50,7 +65,10 @@ class YouTubePlayer {
             return;
         }
         if (!window.YT || !window.YT.Player) {
-            if (this.showBeforeIframeApiLoads && (typeof ngDevMode === 'undefined' || ngDevMode)) {
+            if (this.loadApi) {
+                loadApi(this._nonce);
+            }
+            else if (this.showBeforeIframeApiLoads && (typeof ngDevMode === 'undefined' || ngDevMode)) {
                 throw new Error('Namespace YT not found, cannot construct embedded youtube player. ' +
                     'Please install the YouTube Player API Reference for iframe Embeds: ' +
                     'https://developers.google.com/youtube/iframe_api_reference');
@@ -381,7 +399,7 @@ class YouTubePlayer {
         takeUntil(this._destroyed));
     }
     static { this.ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "17.0.0", ngImport: i0, type: YouTubePlayer, deps: [{ token: i0.NgZone }, { token: PLATFORM_ID }], target: i0.ɵɵFactoryTarget.Component }); }
-    static { this.ɵcmp = i0.ɵɵngDeclareComponent({ minVersion: "14.0.0", version: "17.0.0", type: YouTubePlayer, isStandalone: true, selector: "youtube-player", inputs: { videoId: "videoId", height: "height", width: "width", startSeconds: "startSeconds", endSeconds: "endSeconds", suggestedQuality: "suggestedQuality", playerVars: "playerVars", disableCookies: "disableCookies", showBeforeIframeApiLoads: "showBeforeIframeApiLoads" }, outputs: { ready: "ready", stateChange: "stateChange", error: "error", apiChange: "apiChange", playbackQualityChange: "playbackQualityChange", playbackRateChange: "playbackRateChange" }, viewQueries: [{ propertyName: "youtubeContainer", first: true, predicate: ["youtubeContainer"], descendants: true, static: true }], usesOnChanges: true, ngImport: i0, template: '<div #youtubeContainer></div>', isInline: true, changeDetection: i0.ChangeDetectionStrategy.OnPush, encapsulation: i0.ViewEncapsulation.None }); }
+    static { this.ɵcmp = i0.ɵɵngDeclareComponent({ minVersion: "16.1.0", version: "17.0.0", type: YouTubePlayer, isStandalone: true, selector: "youtube-player", inputs: { videoId: "videoId", height: ["height", "height", numberAttribute], width: ["width", "width", numberAttribute], startSeconds: ["startSeconds", "startSeconds", coerceTime], endSeconds: ["endSeconds", "endSeconds", coerceTime], suggestedQuality: "suggestedQuality", playerVars: "playerVars", disableCookies: ["disableCookies", "disableCookies", booleanAttribute], loadApi: ["loadApi", "loadApi", booleanAttribute], showBeforeIframeApiLoads: ["showBeforeIframeApiLoads", "showBeforeIframeApiLoads", booleanAttribute] }, outputs: { ready: "ready", stateChange: "stateChange", error: "error", apiChange: "apiChange", playbackQualityChange: "playbackQualityChange", playbackRateChange: "playbackRateChange" }, viewQueries: [{ propertyName: "youtubeContainer", first: true, predicate: ["youtubeContainer"], descendants: true, static: true }], usesOnChanges: true, ngImport: i0, template: '<div #youtubeContainer></div>', isInline: true, changeDetection: i0.ChangeDetectionStrategy.OnPush, encapsulation: i0.ViewEncapsulation.None }); }
 }
 i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "17.0.0", ngImport: i0, type: YouTubePlayer, decorators: [{
             type: Component,
@@ -399,21 +417,30 @@ i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "17.0.0", ngImpor
                 }] }], propDecorators: { videoId: [{
                 type: Input
             }], height: [{
-                type: Input
+                type: Input,
+                args: [{ transform: numberAttribute }]
             }], width: [{
-                type: Input
+                type: Input,
+                args: [{ transform: numberAttribute }]
             }], startSeconds: [{
-                type: Input
+                type: Input,
+                args: [{ transform: coerceTime }]
             }], endSeconds: [{
-                type: Input
+                type: Input,
+                args: [{ transform: coerceTime }]
             }], suggestedQuality: [{
                 type: Input
             }], playerVars: [{
                 type: Input
             }], disableCookies: [{
-                type: Input
+                type: Input,
+                args: [{ transform: booleanAttribute }]
+            }], loadApi: [{
+                type: Input,
+                args: [{ transform: booleanAttribute }]
             }], showBeforeIframeApiLoads: [{
-                type: Input
+                type: Input,
+                args: [{ transform: booleanAttribute }]
             }], ready: [{
                 type: Output
             }], stateChange: [{
@@ -430,8 +457,38 @@ i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "17.0.0", ngImpor
                 type: ViewChild,
                 args: ['youtubeContainer', { static: true }]
             }] } });
+let apiLoaded = false;
+/** Loads the YouTube API from a specified URL only once. */
+function loadApi(nonce) {
+    if (apiLoaded) {
+        return;
+    }
+    // We can use `document` directly here, because this logic doesn't run outside the browser.
+    const url = 'https://www.youtube.com/iframe_api';
+    const script = document.createElement('script');
+    const callback = (event) => {
+        script.removeEventListener('load', callback);
+        script.removeEventListener('error', callback);
+        if (event.type === 'error') {
+            apiLoaded = false;
+            if (typeof ngDevMode === 'undefined' || ngDevMode) {
+                console.error(`Failed to load YouTube API from ${url}`);
+            }
+        }
+    };
+    script.addEventListener('load', callback);
+    script.addEventListener('error', callback);
+    script.src = url;
+    script.async = true;
+    if (nonce) {
+        script.nonce = nonce;
+    }
+    // Set this immediately to true so we don't start loading another script
+    // while this one is pending. If loading fails, we'll flip it back to false.
+    apiLoaded = true;
+    document.body.appendChild(script);
+}
 
-const COMPONENTS = [YouTubePlayer];
 class YouTubePlayerModule {
     static { this.ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "17.0.0", ngImport: i0, type: YouTubePlayerModule, deps: [], target: i0.ɵɵFactoryTarget.NgModule }); }
     static { this.ɵmod = i0.ɵɵngDeclareNgModule({ minVersion: "14.0.0", version: "17.0.0", ngImport: i0, type: YouTubePlayerModule, imports: [YouTubePlayer], exports: [YouTubePlayer] }); }
@@ -440,8 +497,8 @@ class YouTubePlayerModule {
 i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "17.0.0", ngImport: i0, type: YouTubePlayerModule, decorators: [{
             type: NgModule,
             args: [{
-                    imports: COMPONENTS,
-                    exports: COMPONENTS,
+                    imports: [YouTubePlayer],
+                    exports: [YouTubePlayer],
                 }]
         }] });
 
@@ -449,5 +506,5 @@ i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "17.0.0", ngImpor
  * Generated bundle index. Do not edit.
  */
 
-export { YouTubePlayer, YouTubePlayerModule };
+export { YOUTUBE_PLAYER_CONFIG, YouTubePlayer, YouTubePlayerModule };
 //# sourceMappingURL=youtube-player.mjs.map

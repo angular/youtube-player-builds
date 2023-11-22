@@ -3,6 +3,7 @@
 import { AfterViewInit } from '@angular/core';
 import { ElementRef } from '@angular/core';
 import * as i0 from '@angular/core';
+import { InjectionToken } from '@angular/core';
 import { NgZone } from '@angular/core';
 import { Observable } from 'rxjs';
 import { OnChanges } from '@angular/core';
@@ -15,11 +16,16 @@ declare const DEFAULT_PLAYER_WIDTH = 640;
 
 declare namespace i1 {
     export {
+        YOUTUBE_PLAYER_CONFIG,
+        YouTubePlayerConfig,
         DEFAULT_PLAYER_WIDTH,
         DEFAULT_PLAYER_HEIGHT,
         YouTubePlayer
     }
 }
+
+/** Injection token used to configure the `YouTubePlayer`. */
+export declare const YOUTUBE_PLAYER_CONFIG: InjectionToken<YouTubePlayerConfig>;
 
 /**
  * Angular component that renders a YouTube player via the YouTube player
@@ -36,6 +42,7 @@ export declare class YouTubePlayer implements AfterViewInit, OnChanges, OnDestro
     private _pendingPlayerState;
     private readonly _destroyed;
     private readonly _playerChanges;
+    private readonly _nonce;
     /** YouTube Video ID to view */
     videoId: string | undefined;
     /** Height of video player */
@@ -59,12 +66,14 @@ export declare class YouTubePlayer implements AfterViewInit, OnChanges, OnDestro
     playerVars: YT.PlayerVars | undefined;
     /** Whether cookies inside the player have been disabled. */
     disableCookies: boolean;
+    /** Whether to automatically load the YouTube iframe API. Defaults to `true`. */
+    loadApi: boolean;
     /**
      * Whether the iframe will attempt to load regardless of the status of the api on the
      * page. Set this to true if you don't want the `onYouTubeIframeAPIReady` field to be
      * set on the global window.
      */
-    showBeforeIframeApiLoads: boolean | undefined;
+    showBeforeIframeApiLoads: boolean;
     /** Outputs are direct proxies from the player itself. */
     readonly ready: Observable<YT.PlayerEvent>;
     readonly stateChange: Observable<YT.OnStateChangeEvent>;
@@ -138,7 +147,22 @@ export declare class YouTubePlayer implements AfterViewInit, OnChanges, OnDestro
     /** Gets an observable that adds an event listener to the player when a user subscribes to it. */
     private _getLazyEmitter;
     static ɵfac: i0.ɵɵFactoryDeclaration<YouTubePlayer, never>;
-    static ɵcmp: i0.ɵɵComponentDeclaration<YouTubePlayer, "youtube-player", never, { "videoId": { "alias": "videoId"; "required": false; }; "height": { "alias": "height"; "required": false; }; "width": { "alias": "width"; "required": false; }; "startSeconds": { "alias": "startSeconds"; "required": false; }; "endSeconds": { "alias": "endSeconds"; "required": false; }; "suggestedQuality": { "alias": "suggestedQuality"; "required": false; }; "playerVars": { "alias": "playerVars"; "required": false; }; "disableCookies": { "alias": "disableCookies"; "required": false; }; "showBeforeIframeApiLoads": { "alias": "showBeforeIframeApiLoads"; "required": false; }; }, { "ready": "ready"; "stateChange": "stateChange"; "error": "error"; "apiChange": "apiChange"; "playbackQualityChange": "playbackQualityChange"; "playbackRateChange": "playbackRateChange"; }, never, never, true, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<YouTubePlayer, "youtube-player", never, { "videoId": { "alias": "videoId"; "required": false; }; "height": { "alias": "height"; "required": false; }; "width": { "alias": "width"; "required": false; }; "startSeconds": { "alias": "startSeconds"; "required": false; }; "endSeconds": { "alias": "endSeconds"; "required": false; }; "suggestedQuality": { "alias": "suggestedQuality"; "required": false; }; "playerVars": { "alias": "playerVars"; "required": false; }; "disableCookies": { "alias": "disableCookies"; "required": false; }; "loadApi": { "alias": "loadApi"; "required": false; }; "showBeforeIframeApiLoads": { "alias": "showBeforeIframeApiLoads"; "required": false; }; }, { "ready": "ready"; "stateChange": "stateChange"; "error": "error"; "apiChange": "apiChange"; "playbackQualityChange": "playbackQualityChange"; "playbackRateChange": "playbackRateChange"; }, never, never, true, never>;
+    static ngAcceptInputType_height: unknown;
+    static ngAcceptInputType_width: unknown;
+    static ngAcceptInputType_startSeconds: number | undefined;
+    static ngAcceptInputType_endSeconds: number | undefined;
+    static ngAcceptInputType_disableCookies: unknown;
+    static ngAcceptInputType_loadApi: unknown;
+    static ngAcceptInputType_showBeforeIframeApiLoads: unknown;
+}
+
+/** Object that can be used to configure the `YouTubePlayer`. */
+export declare interface YouTubePlayerConfig {
+    /**
+     * Whether to load the YouTube iframe API automatically. Defaults to `true`.
+     */
+    loadApi?: boolean;
 }
 
 export declare class YouTubePlayerModule {
