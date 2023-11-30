@@ -24,6 +24,9 @@ declare namespace i1 {
     }
 }
 
+/**  Quality of the placeholder image.  */
+export declare type PlaceholderImageQuality = 'high' | 'standard' | 'low';
+
 /** Injection token used to configure the `YouTubePlayer`. */
 export declare const YOUTUBE_PLAYER_CONFIG: InjectionToken<YouTubePlayerConfig>;
 
@@ -43,6 +46,9 @@ export declare class YouTubePlayer implements AfterViewInit, OnChanges, OnDestro
     private readonly _destroyed;
     private readonly _playerChanges;
     private readonly _nonce;
+    private readonly _changeDetectorRef;
+    protected _isLoading: boolean;
+    protected _hasPlaceholder: boolean;
     /** YouTube Video ID to view */
     videoId: string | undefined;
     /** Height of video player */
@@ -69,11 +75,23 @@ export declare class YouTubePlayer implements AfterViewInit, OnChanges, OnDestro
     /** Whether to automatically load the YouTube iframe API. Defaults to `true`. */
     loadApi: boolean;
     /**
+     * By default the player shows a placeholder image instead of loading the YouTube API which
+     * improves the initial page load performance. This input allows for the behavior to be disabled.
+     */
+    disablePlaceholder: boolean;
+    /**
      * Whether the iframe will attempt to load regardless of the status of the api on the
      * page. Set this to true if you don't want the `onYouTubeIframeAPIReady` field to be
      * set on the global window.
      */
     showBeforeIframeApiLoads: boolean;
+    /** Accessible label for the play button inside of the placeholder. */
+    placeholderButtonLabel: string;
+    /**
+     * Quality of the displayed placeholder image. Defaults to `standard`,
+     * because not all video have a high-quality placeholder.
+     */
+    placeholderImageQuality: PlaceholderImageQuality;
     /** Outputs are direct proxies from the player itself. */
     readonly ready: Observable<YT.PlayerEvent>;
     readonly stateChange: Observable<YT.OnStateChangeEvent>;
@@ -127,6 +145,15 @@ export declare class YouTubePlayer implements AfterViewInit, OnChanges, OnDestro
     getVideoUrl(): string;
     /** See https://developers.google.com/youtube/iframe_api_reference#getVideoEmbedCode */
     getVideoEmbedCode(): string;
+    /**
+     * Loads the YouTube API and sets up the player.
+     * @param playVideo Whether to automatically play the video once the player is loaded.
+     */
+    protected _load(playVideo: boolean): void;
+    /** Loads the player depending on the internal state of the component. */
+    private _conditionallyLoad;
+    /** Whether to show the placeholder element. */
+    protected _shouldShowPlaceholder(): boolean;
     /** Gets an object that should be used to store the temporary API state. */
     private _getPendingState;
     /**
@@ -134,7 +161,10 @@ export declare class YouTubePlayer implements AfterViewInit, OnChanges, OnDestro
      * requires the YouTube player to be recreated.
      */
     private _shouldRecreatePlayer;
-    /** Creates a new YouTube player and destroys the existing one. */
+    /**
+     * Creates a new YouTube player and destroys the existing one.
+     * @param playVideo Whether to play the video once it loads.
+     */
     private _createPlayer;
     /** Applies any state that changed before the player was initialized. */
     private _applyPendingPlayerState;
@@ -147,22 +177,34 @@ export declare class YouTubePlayer implements AfterViewInit, OnChanges, OnDestro
     /** Gets an observable that adds an event listener to the player when a user subscribes to it. */
     private _getLazyEmitter;
     static ɵfac: i0.ɵɵFactoryDeclaration<YouTubePlayer, never>;
-    static ɵcmp: i0.ɵɵComponentDeclaration<YouTubePlayer, "youtube-player", never, { "videoId": { "alias": "videoId"; "required": false; }; "height": { "alias": "height"; "required": false; }; "width": { "alias": "width"; "required": false; }; "startSeconds": { "alias": "startSeconds"; "required": false; }; "endSeconds": { "alias": "endSeconds"; "required": false; }; "suggestedQuality": { "alias": "suggestedQuality"; "required": false; }; "playerVars": { "alias": "playerVars"; "required": false; }; "disableCookies": { "alias": "disableCookies"; "required": false; }; "loadApi": { "alias": "loadApi"; "required": false; }; "showBeforeIframeApiLoads": { "alias": "showBeforeIframeApiLoads"; "required": false; }; }, { "ready": "ready"; "stateChange": "stateChange"; "error": "error"; "apiChange": "apiChange"; "playbackQualityChange": "playbackQualityChange"; "playbackRateChange": "playbackRateChange"; }, never, never, true, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<YouTubePlayer, "youtube-player", never, { "videoId": { "alias": "videoId"; "required": false; }; "height": { "alias": "height"; "required": false; }; "width": { "alias": "width"; "required": false; }; "startSeconds": { "alias": "startSeconds"; "required": false; }; "endSeconds": { "alias": "endSeconds"; "required": false; }; "suggestedQuality": { "alias": "suggestedQuality"; "required": false; }; "playerVars": { "alias": "playerVars"; "required": false; }; "disableCookies": { "alias": "disableCookies"; "required": false; }; "loadApi": { "alias": "loadApi"; "required": false; }; "disablePlaceholder": { "alias": "disablePlaceholder"; "required": false; }; "showBeforeIframeApiLoads": { "alias": "showBeforeIframeApiLoads"; "required": false; }; "placeholderButtonLabel": { "alias": "placeholderButtonLabel"; "required": false; }; "placeholderImageQuality": { "alias": "placeholderImageQuality"; "required": false; }; }, { "ready": "ready"; "stateChange": "stateChange"; "error": "error"; "apiChange": "apiChange"; "playbackQualityChange": "playbackQualityChange"; "playbackRateChange": "playbackRateChange"; }, never, never, true, never>;
     static ngAcceptInputType_height: unknown;
     static ngAcceptInputType_width: unknown;
     static ngAcceptInputType_startSeconds: number | undefined;
     static ngAcceptInputType_endSeconds: number | undefined;
     static ngAcceptInputType_disableCookies: unknown;
     static ngAcceptInputType_loadApi: unknown;
+    static ngAcceptInputType_disablePlaceholder: unknown;
     static ngAcceptInputType_showBeforeIframeApiLoads: unknown;
 }
 
 /** Object that can be used to configure the `YouTubePlayer`. */
 export declare interface YouTubePlayerConfig {
-    /**
-     * Whether to load the YouTube iframe API automatically. Defaults to `true`.
-     */
+    /** Whether to load the YouTube iframe API automatically. Defaults to `true`. */
     loadApi?: boolean;
+    /**
+     * By default the player shows a placeholder image instead of loading the YouTube API which
+     * improves the initial page load performance. Use this option to disable the placeholder loading
+     * behavior globally. Defaults to `false`.
+     */
+    disablePlaceholder?: boolean;
+    /** Accessible label for the play button inside of the placeholder. */
+    placeholderButtonLabel?: string;
+    /**
+     * Quality of the displayed placeholder image. Defaults to `standard`,
+     * because not all video have a high-quality placeholder.
+     */
+    placeholderImageQuality?: PlaceholderImageQuality;
 }
 
 export declare class YouTubePlayerModule {

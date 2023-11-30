@@ -1,8 +1,73 @@
 import * as i0 from '@angular/core';
-import { InjectionToken, numberAttribute, inject, CSP_NONCE, PLATFORM_ID, booleanAttribute, Component, ChangeDetectionStrategy, ViewEncapsulation, Inject, Input, Output, ViewChild, NgModule } from '@angular/core';
+import { Component, ChangeDetectionStrategy, ViewEncapsulation, Input, InjectionToken, numberAttribute, inject, CSP_NONCE, ChangeDetectorRef, PLATFORM_ID, booleanAttribute, Inject, Output, ViewChild, NgModule } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { Subject, BehaviorSubject, fromEventPattern, of, Observable } from 'rxjs';
 import { switchMap, takeUntil } from 'rxjs/operators';
+
+class YouTubePlayerPlaceholder {
+    /** Gets the background image showing the placeholder. */
+    _getBackgroundImage() {
+        let url;
+        if (this.quality === 'low') {
+            url = `https://i.ytimg.com/vi/${this.videoId}/hqdefault.jpg`;
+        }
+        else if (this.quality === 'high') {
+            url = `https://i.ytimg.com/vi/${this.videoId}/maxresdefault.jpg`;
+        }
+        else {
+            url = `https://i.ytimg.com/vi_webp/${this.videoId}/sddefault.webp`;
+        }
+        return `url(${url})`;
+    }
+    static { this.ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "17.0.4", ngImport: i0, type: YouTubePlayerPlaceholder, deps: [], target: i0.ɵɵFactoryTarget.Component }); }
+    static { this.ɵcmp = i0.ɵɵngDeclareComponent({ minVersion: "14.0.0", version: "17.0.4", type: YouTubePlayerPlaceholder, isStandalone: true, selector: "youtube-player-placeholder", inputs: { videoId: "videoId", width: "width", height: "height", isLoading: "isLoading", buttonLabel: "buttonLabel", quality: "quality" }, host: { properties: { "class.youtube-player-placeholder-loading": "isLoading", "style.background-image": "_getBackgroundImage()", "style.width.px": "width", "style.height.px": "height" }, classAttribute: "youtube-player-placeholder" }, ngImport: i0, template: `
+    <button type="button" class="youtube-player-placeholder-button" [attr.aria-label]="buttonLabel">
+      <svg
+        height="100%"
+        version="1.1"
+        viewBox="0 0 68 48"
+        focusable="false"
+        aria-hidden="true">
+        <path d="M66.52,7.74c-0.78-2.93-2.49-5.41-5.42-6.19C55.79,.13,34,0,34,0S12.21,.13,6.9,1.55 C3.97,2.33,2.27,4.81,1.48,7.74C0.06,13.05,0,24,0,24s0.06,10.95,1.48,16.26c0.78,2.93,2.49,5.41,5.42,6.19 C12.21,47.87,34,48,34,48s21.79-0.13,27.1-1.55c2.93-0.78,4.64-3.26,5.42-6.19C67.94,34.95,68,24,68,24S67.94,13.05,66.52,7.74z" fill="#f00"></path>
+        <path d="M 45,24 27,14 27,34" fill="#fff"></path>
+      </svg>
+    </button>
+  `, isInline: true, styles: [".youtube-player-placeholder{display:flex;align-items:center;justify-content:center;width:100%;overflow:hidden;cursor:pointer;background-color:#000;background-position:center center;background-size:cover;transition:box-shadow 300ms ease;box-shadow:inset 0 120px 90px -90px rgba(0,0,0,.8)}.youtube-player-placeholder-button{transition:opacity 300ms ease;-moz-appearance:none;-webkit-appearance:none;background:none;border:none;padding:0;display:flex}.youtube-player-placeholder-button svg{width:68px;height:48px}.youtube-player-placeholder-loading{box-shadow:none}.youtube-player-placeholder-loading .youtube-player-placeholder-button{opacity:0}"], changeDetection: i0.ChangeDetectionStrategy.OnPush, encapsulation: i0.ViewEncapsulation.None }); }
+}
+i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "17.0.4", ngImport: i0, type: YouTubePlayerPlaceholder, decorators: [{
+            type: Component,
+            args: [{ selector: 'youtube-player-placeholder', changeDetection: ChangeDetectionStrategy.OnPush, encapsulation: ViewEncapsulation.None, template: `
+    <button type="button" class="youtube-player-placeholder-button" [attr.aria-label]="buttonLabel">
+      <svg
+        height="100%"
+        version="1.1"
+        viewBox="0 0 68 48"
+        focusable="false"
+        aria-hidden="true">
+        <path d="M66.52,7.74c-0.78-2.93-2.49-5.41-5.42-6.19C55.79,.13,34,0,34,0S12.21,.13,6.9,1.55 C3.97,2.33,2.27,4.81,1.48,7.74C0.06,13.05,0,24,0,24s0.06,10.95,1.48,16.26c0.78,2.93,2.49,5.41,5.42,6.19 C12.21,47.87,34,48,34,48s21.79-0.13,27.1-1.55c2.93-0.78,4.64-3.26,5.42-6.19C67.94,34.95,68,24,68,24S67.94,13.05,66.52,7.74z" fill="#f00"></path>
+        <path d="M 45,24 27,14 27,34" fill="#fff"></path>
+      </svg>
+    </button>
+  `, standalone: true, host: {
+                        'class': 'youtube-player-placeholder',
+                        '[class.youtube-player-placeholder-loading]': 'isLoading',
+                        '[style.background-image]': '_getBackgroundImage()',
+                        '[style.width.px]': 'width',
+                        '[style.height.px]': 'height',
+                    }, styles: [".youtube-player-placeholder{display:flex;align-items:center;justify-content:center;width:100%;overflow:hidden;cursor:pointer;background-color:#000;background-position:center center;background-size:cover;transition:box-shadow 300ms ease;box-shadow:inset 0 120px 90px -90px rgba(0,0,0,.8)}.youtube-player-placeholder-button{transition:opacity 300ms ease;-moz-appearance:none;-webkit-appearance:none;background:none;border:none;padding:0;display:flex}.youtube-player-placeholder-button svg{width:68px;height:48px}.youtube-player-placeholder-loading{box-shadow:none}.youtube-player-placeholder-loading .youtube-player-placeholder-button{opacity:0}"] }]
+        }], propDecorators: { videoId: [{
+                type: Input
+            }], width: [{
+                type: Input
+            }], height: [{
+                type: Input
+            }], isLoading: [{
+                type: Input
+            }], buttonLabel: [{
+                type: Input
+            }], quality: [{
+                type: Input
+            }] } });
 
 /// <reference types="youtube" />
 /** Injection token used to configure the `YouTubePlayer`. */
@@ -38,10 +103,18 @@ class YouTubePlayer {
         this._destroyed = new Subject();
         this._playerChanges = new BehaviorSubject(undefined);
         this._nonce = inject(CSP_NONCE, { optional: true });
+        this._changeDetectorRef = inject(ChangeDetectorRef);
+        this._isLoading = false;
+        this._hasPlaceholder = true;
         this._height = DEFAULT_PLAYER_HEIGHT;
         this._width = DEFAULT_PLAYER_WIDTH;
         /** Whether cookies inside the player have been disabled. */
         this.disableCookies = false;
+        /**
+         * By default the player shows a placeholder image instead of loading the YouTube API which
+         * improves the initial page load performance. This input allows for the behavior to be disabled.
+         */
+        this.disablePlaceholder = false;
         /**
          * Whether the iframe will attempt to load regardless of the status of the api on the
          * page. Set this to true if you don't want the `onYouTubeIframeAPIReady` field to be
@@ -57,35 +130,17 @@ class YouTubePlayer {
         this.playbackRateChange = this._getLazyEmitter('onPlaybackRateChange');
         const config = inject(YOUTUBE_PLAYER_CONFIG, { optional: true });
         this.loadApi = config?.loadApi ?? true;
+        this.disablePlaceholder = !!config?.disablePlaceholder;
+        this.placeholderButtonLabel = config?.placeholderButtonLabel || 'Play video';
+        this.placeholderImageQuality = config?.placeholderImageQuality || 'standard';
         this._isBrowser = isPlatformBrowser(platformId);
     }
     ngAfterViewInit() {
-        // Don't do anything if we're not in a browser environment.
-        if (!this._isBrowser) {
-            return;
-        }
-        if (!window.YT || !window.YT.Player) {
-            if (this.loadApi) {
-                loadApi(this._nonce);
-            }
-            else if (this.showBeforeIframeApiLoads && (typeof ngDevMode === 'undefined' || ngDevMode)) {
-                throw new Error('Namespace YT not found, cannot construct embedded youtube player. ' +
-                    'Please install the YouTube Player API Reference for iframe Embeds: ' +
-                    'https://developers.google.com/youtube/iframe_api_reference');
-            }
-            this._existingApiReadyCallback = window.onYouTubeIframeAPIReady;
-            window.onYouTubeIframeAPIReady = () => {
-                this._existingApiReadyCallback?.();
-                this._ngZone.run(() => this._createPlayer());
-            };
-        }
-        else {
-            this._createPlayer();
-        }
+        this._conditionallyLoad();
     }
     ngOnChanges(changes) {
         if (this._shouldRecreatePlayer(changes)) {
-            this._createPlayer();
+            this._conditionallyLoad();
         }
         else if (this._player) {
             if (changes['width'] || changes['height']) {
@@ -263,6 +318,57 @@ class YouTubePlayer {
     getVideoEmbedCode() {
         return this._player ? this._player.getVideoEmbedCode() : '';
     }
+    /**
+     * Loads the YouTube API and sets up the player.
+     * @param playVideo Whether to automatically play the video once the player is loaded.
+     */
+    _load(playVideo) {
+        // Don't do anything if we're not in a browser environment.
+        if (!this._isBrowser) {
+            return;
+        }
+        if (!window.YT || !window.YT.Player) {
+            if (this.loadApi) {
+                this._isLoading = true;
+                loadApi(this._nonce);
+            }
+            else if (this.showBeforeIframeApiLoads && (typeof ngDevMode === 'undefined' || ngDevMode)) {
+                throw new Error('Namespace YT not found, cannot construct embedded youtube player. ' +
+                    'Please install the YouTube Player API Reference for iframe Embeds: ' +
+                    'https://developers.google.com/youtube/iframe_api_reference');
+            }
+            this._existingApiReadyCallback = window.onYouTubeIframeAPIReady;
+            window.onYouTubeIframeAPIReady = () => {
+                this._existingApiReadyCallback?.();
+                this._ngZone.run(() => this._createPlayer(playVideo));
+            };
+        }
+        else {
+            this._createPlayer(playVideo);
+        }
+    }
+    /** Loads the player depending on the internal state of the component. */
+    _conditionallyLoad() {
+        // If the placeholder isn't shown anymore, we have to trigger a load.
+        if (!this._shouldShowPlaceholder()) {
+            this._load(false);
+        }
+        else if (this.playerVars?.autoplay === 1) {
+            // If it's an autoplaying video, we have to hide the placeholder and start playing.
+            this._load(true);
+        }
+    }
+    /** Whether to show the placeholder element. */
+    _shouldShowPlaceholder() {
+        if (this.disablePlaceholder) {
+            return false;
+        }
+        // Since we don't load the API on the server, we show the placeholder permanently.
+        if (!this._isBrowser) {
+            return true;
+        }
+        return this._hasPlaceholder && !!this.videoId && !this._player;
+    }
     /** Gets an object that should be used to store the temporary API state. */
     _getPendingState() {
         if (!this._pendingPlayerState) {
@@ -275,11 +381,17 @@ class YouTubePlayer {
      * requires the YouTube player to be recreated.
      */
     _shouldRecreatePlayer(changes) {
-        const change = changes['videoId'] || changes['playerVars'] || changes['disableCookies'];
+        const change = changes['videoId'] ||
+            changes['playerVars'] ||
+            changes['disableCookies'] ||
+            changes['disablePlaceholder'];
         return !!change && !change.isFirstChange();
     }
-    /** Creates a new YouTube player and destroys the existing one. */
-    _createPlayer() {
+    /**
+     * Creates a new YouTube player and destroys the existing one.
+     * @param playVideo Whether to play the video once it loads.
+     */
+    _createPlayer(playVideo) {
         this._player?.destroy();
         this._pendingPlayer?.destroy();
         // A player can't be created if the API isn't loaded,
@@ -294,26 +406,33 @@ class YouTubePlayer {
             host: this.disableCookies ? 'https://www.youtube-nocookie.com' : undefined,
             width: this.width,
             height: this.height,
-            playerVars: this.playerVars,
+            // Calling `playVideo` on load doesn't appear to actually play
+            // the video so we need to trigger it through `playerVars` instead.
+            playerVars: playVideo ? { ...(this.playerVars || {}), autoplay: 1 } : this.playerVars,
         }));
         const whenReady = () => {
             // Only assign the player once it's ready, otherwise YouTube doesn't expose some APIs.
-            this._player = player;
-            this._pendingPlayer = undefined;
-            player.removeEventListener('onReady', whenReady);
-            this._playerChanges.next(player);
-            this._setSize();
-            this._setQuality();
-            if (this._pendingPlayerState) {
-                this._applyPendingPlayerState(player, this._pendingPlayerState);
-                this._pendingPlayerState = undefined;
-            }
-            // Only cue the player when it either hasn't started yet or it's cued,
-            // otherwise cuing it can interrupt a player with autoplay enabled.
-            const state = player.getPlayerState();
-            if (state === YT.PlayerState.UNSTARTED || state === YT.PlayerState.CUED || state == null) {
-                this._cuePlayer();
-            }
+            this._ngZone.run(() => {
+                this._isLoading = false;
+                this._hasPlaceholder = false;
+                this._player = player;
+                this._pendingPlayer = undefined;
+                player.removeEventListener('onReady', whenReady);
+                this._playerChanges.next(player);
+                this._setSize();
+                this._setQuality();
+                if (this._pendingPlayerState) {
+                    this._applyPendingPlayerState(player, this._pendingPlayerState);
+                    this._pendingPlayerState = undefined;
+                }
+                // Only cue the player when it either hasn't started yet or it's cued,
+                // otherwise cuing it can interrupt a player with autoplay enabled.
+                const state = player.getPlayerState();
+                if (state === YT.PlayerState.UNSTARTED || state === YT.PlayerState.CUED || state == null) {
+                    this._cuePlayer();
+                }
+                this._changeDetectorRef.markForCheck();
+            });
         };
         this._pendingPlayer = player;
         player.addEventListener('onReady', whenReady);
@@ -399,7 +518,21 @@ class YouTubePlayer {
         takeUntil(this._destroyed));
     }
     static { this.ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "17.0.4", ngImport: i0, type: YouTubePlayer, deps: [{ token: i0.NgZone }, { token: PLATFORM_ID }], target: i0.ɵɵFactoryTarget.Component }); }
-    static { this.ɵcmp = i0.ɵɵngDeclareComponent({ minVersion: "16.1.0", version: "17.0.4", type: YouTubePlayer, isStandalone: true, selector: "youtube-player", inputs: { videoId: "videoId", height: ["height", "height", numberAttribute], width: ["width", "width", numberAttribute], startSeconds: ["startSeconds", "startSeconds", coerceTime], endSeconds: ["endSeconds", "endSeconds", coerceTime], suggestedQuality: "suggestedQuality", playerVars: "playerVars", disableCookies: ["disableCookies", "disableCookies", booleanAttribute], loadApi: ["loadApi", "loadApi", booleanAttribute], showBeforeIframeApiLoads: ["showBeforeIframeApiLoads", "showBeforeIframeApiLoads", booleanAttribute] }, outputs: { ready: "ready", stateChange: "stateChange", error: "error", apiChange: "apiChange", playbackQualityChange: "playbackQualityChange", playbackRateChange: "playbackRateChange" }, viewQueries: [{ propertyName: "youtubeContainer", first: true, predicate: ["youtubeContainer"], descendants: true, static: true }], usesOnChanges: true, ngImport: i0, template: '<div #youtubeContainer></div>', isInline: true, changeDetection: i0.ChangeDetectionStrategy.OnPush, encapsulation: i0.ViewEncapsulation.None }); }
+    static { this.ɵcmp = i0.ɵɵngDeclareComponent({ minVersion: "17.0.0", version: "17.0.4", type: YouTubePlayer, isStandalone: true, selector: "youtube-player", inputs: { videoId: "videoId", height: ["height", "height", numberAttribute], width: ["width", "width", numberAttribute], startSeconds: ["startSeconds", "startSeconds", coerceTime], endSeconds: ["endSeconds", "endSeconds", coerceTime], suggestedQuality: "suggestedQuality", playerVars: "playerVars", disableCookies: ["disableCookies", "disableCookies", booleanAttribute], loadApi: ["loadApi", "loadApi", booleanAttribute], disablePlaceholder: ["disablePlaceholder", "disablePlaceholder", booleanAttribute], showBeforeIframeApiLoads: ["showBeforeIframeApiLoads", "showBeforeIframeApiLoads", booleanAttribute], placeholderButtonLabel: "placeholderButtonLabel", placeholderImageQuality: "placeholderImageQuality" }, outputs: { ready: "ready", stateChange: "stateChange", error: "error", apiChange: "apiChange", playbackQualityChange: "playbackQualityChange", playbackRateChange: "playbackRateChange" }, viewQueries: [{ propertyName: "youtubeContainer", first: true, predicate: ["youtubeContainer"], descendants: true, static: true }], usesOnChanges: true, ngImport: i0, template: `
+    @if (_shouldShowPlaceholder()) {
+      <youtube-player-placeholder
+        [videoId]="videoId!"
+        [width]="width"
+        [height]="height"
+        [isLoading]="_isLoading"
+        [buttonLabel]="placeholderButtonLabel"
+        [quality]="placeholderImageQuality"
+        (click)="_load(true)"/>
+    }
+    <div [style.display]="_shouldShowPlaceholder() ? 'none' : ''">
+      <div #youtubeContainer></div>
+    </div>
+  `, isInline: true, dependencies: [{ kind: "component", type: YouTubePlayerPlaceholder, selector: "youtube-player-placeholder", inputs: ["videoId", "width", "height", "isLoading", "buttonLabel", "quality"] }], changeDetection: i0.ChangeDetectionStrategy.OnPush, encapsulation: i0.ViewEncapsulation.None }); }
 }
 i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "17.0.4", ngImport: i0, type: YouTubePlayer, decorators: [{
             type: Component,
@@ -408,8 +541,22 @@ i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "17.0.4", ngImpor
                     changeDetection: ChangeDetectionStrategy.OnPush,
                     encapsulation: ViewEncapsulation.None,
                     standalone: true,
-                    // This div is *replaced* by the YouTube player embed.
-                    template: '<div #youtubeContainer></div>',
+                    imports: [YouTubePlayerPlaceholder],
+                    template: `
+    @if (_shouldShowPlaceholder()) {
+      <youtube-player-placeholder
+        [videoId]="videoId!"
+        [width]="width"
+        [height]="height"
+        [isLoading]="_isLoading"
+        [buttonLabel]="placeholderButtonLabel"
+        [quality]="placeholderImageQuality"
+        (click)="_load(true)"/>
+    }
+    <div [style.display]="_shouldShowPlaceholder() ? 'none' : ''">
+      <div #youtubeContainer></div>
+    </div>
+  `,
                 }]
         }], ctorParameters: () => [{ type: i0.NgZone }, { type: Object, decorators: [{
                     type: Inject,
@@ -438,9 +585,16 @@ i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "17.0.4", ngImpor
             }], loadApi: [{
                 type: Input,
                 args: [{ transform: booleanAttribute }]
+            }], disablePlaceholder: [{
+                type: Input,
+                args: [{ transform: booleanAttribute }]
             }], showBeforeIframeApiLoads: [{
                 type: Input,
                 args: [{ transform: booleanAttribute }]
+            }], placeholderButtonLabel: [{
+                type: Input
+            }], placeholderImageQuality: [{
+                type: Input
             }], ready: [{
                 type: Output
             }], stateChange: [{
