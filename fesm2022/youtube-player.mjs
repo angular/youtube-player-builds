@@ -635,7 +635,7 @@ function loadApi(nonce) {
     script.src = url;
     script.async = true;
     if (nonce) {
-        script.nonce = nonce;
+        script.setAttribute('nonce', nonce);
     }
     // Set this immediately to true so we don't start loading another script
     // while this one is pending. If loading fails, we'll flip it back to false.
