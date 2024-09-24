@@ -1,5 +1,5 @@
 import * as i0 from '@angular/core';
-import { Component, ChangeDetectionStrategy, ViewEncapsulation, Input, InjectionToken, numberAttribute, inject, CSP_NONCE, ChangeDetectorRef, PLATFORM_ID, booleanAttribute, Inject, Output, ViewChild, NgModule } from '@angular/core';
+import { Component, ChangeDetectionStrategy, ViewEncapsulation, Input, InjectionToken, numberAttribute, inject, NgZone, CSP_NONCE, ChangeDetectorRef, PLATFORM_ID, booleanAttribute, Output, ViewChild, NgModule } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { Subject, BehaviorSubject, fromEventPattern, of, Observable } from 'rxjs';
 import { switchMap, takeUntil } from 'rxjs/operators';
@@ -111,12 +111,12 @@ class YouTubePlayer {
     set width(width) {
         this._width = width == null || isNaN(width) ? DEFAULT_PLAYER_WIDTH : width;
     }
-    constructor(_ngZone, platformId) {
-        this._ngZone = _ngZone;
-        this._destroyed = new Subject();
-        this._playerChanges = new BehaviorSubject(undefined);
+    constructor() {
+        this._ngZone = inject(NgZone);
         this._nonce = inject(CSP_NONCE, { optional: true });
         this._changeDetectorRef = inject(ChangeDetectorRef);
+        this._destroyed = new Subject();
+        this._playerChanges = new BehaviorSubject(undefined);
         this._isLoading = false;
         this._hasPlaceholder = true;
         this._height = DEFAULT_PLAYER_HEIGHT;
@@ -141,6 +141,7 @@ class YouTubePlayer {
         this.apiChange = this._getLazyEmitter('onApiChange');
         this.playbackQualityChange = this._getLazyEmitter('onPlaybackQualityChange');
         this.playbackRateChange = this._getLazyEmitter('onPlaybackRateChange');
+        const platformId = inject(PLATFORM_ID);
         const config = inject(YOUTUBE_PLAYER_CONFIG, { optional: true });
         this.loadApi = config?.loadApi ?? true;
         this.disablePlaceholder = !!config?.disablePlaceholder;
@@ -531,7 +532,7 @@ class YouTubePlayer {
         // Ensures that everything is cleared out on destroy.
         takeUntil(this._destroyed));
     }
-    static { this.ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "19.0.0-next.3", ngImport: i0, type: YouTubePlayer, deps: [{ token: i0.NgZone }, { token: PLATFORM_ID }], target: i0.ɵɵFactoryTarget.Component }); }
+    static { this.ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "19.0.0-next.3", ngImport: i0, type: YouTubePlayer, deps: [], target: i0.ɵɵFactoryTarget.Component }); }
     static { this.ɵcmp = i0.ɵɵngDeclareComponent({ minVersion: "17.0.0", version: "19.0.0-next.3", type: YouTubePlayer, isStandalone: true, selector: "youtube-player", inputs: { videoId: "videoId", height: ["height", "height", numberAttribute], width: ["width", "width", numberAttribute], startSeconds: ["startSeconds", "startSeconds", coerceTime], endSeconds: ["endSeconds", "endSeconds", coerceTime], suggestedQuality: "suggestedQuality", playerVars: "playerVars", disableCookies: ["disableCookies", "disableCookies", booleanAttribute], loadApi: ["loadApi", "loadApi", booleanAttribute], disablePlaceholder: ["disablePlaceholder", "disablePlaceholder", booleanAttribute], showBeforeIframeApiLoads: ["showBeforeIframeApiLoads", "showBeforeIframeApiLoads", booleanAttribute], placeholderButtonLabel: "placeholderButtonLabel", placeholderImageQuality: "placeholderImageQuality" }, outputs: { ready: "ready", stateChange: "stateChange", error: "error", apiChange: "apiChange", playbackQualityChange: "playbackQualityChange", playbackRateChange: "playbackRateChange" }, viewQueries: [{ propertyName: "youtubeContainer", first: true, predicate: ["youtubeContainer"], descendants: true, static: true }], usesOnChanges: true, ngImport: i0, template: `
     @if (_shouldShowPlaceholder()) {
       <youtube-player-placeholder
@@ -572,10 +573,7 @@ i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "19.0.0-next.3", 
     </div>
   `,
                 }]
-        }], ctorParameters: () => [{ type: i0.NgZone }, { type: Object, decorators: [{
-                    type: Inject,
-                    args: [PLATFORM_ID]
-                }] }], propDecorators: { videoId: [{
+        }], ctorParameters: () => [], propDecorators: { videoId: [{
                 type: Input
             }], height: [{
                 type: Input,

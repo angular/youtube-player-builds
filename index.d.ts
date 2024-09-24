@@ -4,7 +4,6 @@ import { AfterViewInit } from '@angular/core';
 import { ElementRef } from '@angular/core';
 import * as i0 from '@angular/core';
 import { InjectionToken } from '@angular/core';
-import { NgZone } from '@angular/core';
 import { Observable } from 'rxjs';
 import { OnChanges } from '@angular/core';
 import { OnDestroy } from '@angular/core';
@@ -37,18 +36,18 @@ export declare const YOUTUBE_PLAYER_CONFIG: InjectionToken<YouTubePlayerConfig>;
  */
 export declare class YouTubePlayer implements AfterViewInit, OnChanges, OnDestroy {
     private _ngZone;
-    /** Whether we're currently rendering inside a browser. */
-    private readonly _isBrowser;
+    private readonly _nonce;
+    private readonly _changeDetectorRef;
     private _player;
     private _pendingPlayer;
     private _existingApiReadyCallback;
     private _pendingPlayerState;
     private readonly _destroyed;
     private readonly _playerChanges;
-    private readonly _nonce;
-    private readonly _changeDetectorRef;
     protected _isLoading: boolean;
     protected _hasPlaceholder: boolean;
+    /** Whether we're currently rendering inside a browser. */
+    private readonly _isBrowser;
     /** YouTube Video ID to view */
     videoId: string | undefined;
     /** Height of video player */
@@ -101,7 +100,7 @@ export declare class YouTubePlayer implements AfterViewInit, OnChanges, OnDestro
     readonly playbackRateChange: Observable<YT.OnPlaybackRateChangeEvent>;
     /** The element that will be replaced by the iframe. */
     youtubeContainer: ElementRef<HTMLElement>;
-    constructor(_ngZone: NgZone, platformId: Object);
+    constructor(...args: unknown[]);
     ngAfterViewInit(): void;
     ngOnChanges(changes: SimpleChanges): void;
     ngOnDestroy(): void;
