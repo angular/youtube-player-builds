@@ -91,12 +91,17 @@ export declare class YouTubePlayer implements AfterViewInit, OnChanges, OnDestro
      * because not all video have a high-quality placeholder.
      */
     placeholderImageQuality: PlaceholderImageQuality;
-    /** Outputs are direct proxies from the player itself. */
+    /** Emits when the player is initialized. */
     readonly ready: Observable<YT.PlayerEvent>;
+    /** Emits when the state of the player has changed. */
     readonly stateChange: Observable<YT.OnStateChangeEvent>;
+    /** Emits when there's an error while initializing the player. */
     readonly error: Observable<YT.OnErrorEvent>;
+    /** Emits when the underlying API of the player has changed. */
     readonly apiChange: Observable<YT.PlayerEvent>;
+    /** Emits when the playback quality has changed. */
     readonly playbackQualityChange: Observable<YT.OnPlaybackQualityChangeEvent>;
+    /** Emits when the playback rate has changed. */
     readonly playbackRateChange: Observable<YT.OnPlaybackRateChangeEvent>;
     /** The element that will be replaced by the iframe. */
     youtubeContainer: ElementRef<HTMLElement>;

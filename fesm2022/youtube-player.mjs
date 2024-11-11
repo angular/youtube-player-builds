@@ -1,5 +1,5 @@
 import * as i0 from '@angular/core';
-import { Component, ChangeDetectionStrategy, ViewEncapsulation, Input, InjectionToken, numberAttribute, inject, NgZone, CSP_NONCE, ChangeDetectorRef, PLATFORM_ID, booleanAttribute, Output, ViewChild, NgModule } from '@angular/core';
+import { Component, ChangeDetectionStrategy, ViewEncapsulation, Input, InjectionToken, numberAttribute, inject, NgZone, CSP_NONCE, ChangeDetectorRef, EventEmitter, PLATFORM_ID, booleanAttribute, Output, ViewChild, NgModule } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { Subject, BehaviorSubject, fromEventPattern, of, Observable } from 'rxjs';
 import { switchMap, takeUntil } from 'rxjs/operators';
@@ -173,12 +173,19 @@ class YouTubePlayer {
      * because not all video have a high-quality placeholder.
      */
     placeholderImageQuality;
-    /** Outputs are direct proxies from the player itself. */
-    ready = this._getLazyEmitter('onReady');
+    // Note: ready event can't go through the lazy emitter, because it
+    // happens before the `_playerChanges` stream emits the new player.
+    /** Emits when the player is initialized. */
+    ready = new EventEmitter();
+    /** Emits when the state of the player has changed. */
     stateChange = this._getLazyEmitter('onStateChange');
+    /** Emits when there's an error while initializing the player. */
     error = this._getLazyEmitter('onError');
+    /** Emits when the underlying API of the player has changed. */
     apiChange = this._getLazyEmitter('onApiChange');
+    /** Emits when the playback quality has changed. */
     playbackQualityChange = this._getLazyEmitter('onPlaybackQualityChange');
+    /** Emits when the playback rate has changed. */
     playbackRateChange = this._getLazyEmitter('onPlaybackRateChange');
     /** The element that will be replaced by the iframe. */
     youtubeContainer;
@@ -467,7 +474,7 @@ class YouTubePlayer {
             // the video so we need to trigger it through `playerVars` instead.
             playerVars: playVideo ? { ...(this.playerVars || {}), autoplay: 1 } : this.playerVars,
         }));
-        const whenReady = () => {
+        const whenReady = (event) => {
             // Only assign the player once it's ready, otherwise YouTube doesn't expose some APIs.
             this._ngZone.run(() => {
                 this._isLoading = false;
@@ -476,6 +483,7 @@ class YouTubePlayer {
                 this._pendingPlayer = undefined;
                 player.removeEventListener('onReady', whenReady);
                 this._playerChanges.next(player);
+                this.ready.emit(event);
                 this._setSize();
                 this._setQuality();
                 if (this._pendingPlayerState) {
@@ -487,6 +495,13 @@ class YouTubePlayer {
                 const state = player.getPlayerState();
                 if (state === PlayerState.UNSTARTED || state === PlayerState.CUED || state == null) {
                     this._cuePlayer();
+                }
+                else if (playVideo && this.startSeconds && this.startSeconds > 0) {
+                    // We have to use `seekTo` when `startSeconds` are specified to simulate it playing from
+                    // a specific time. The "proper" way to do it would be to either go through `cueVideoById`
+                    // or `playerVars.start`, but at the time of writing both end up resetting the video
+                    // to the state as if the user hasn't interacted with it.
+                    player.seekTo(this.startSeconds, true);
                 }
                 this._changeDetectorRef.markForCheck();
             });
