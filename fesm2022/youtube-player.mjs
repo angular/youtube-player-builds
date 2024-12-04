@@ -566,9 +566,9 @@ class YouTubePlayer {
         // player is changed. If there's no player, return an observable that never emits.
         switchMap(player => {
             return player
-                ? fromEventPattern((listener) => {
+                ? fromEventPattern(listener => {
                     player.addEventListener(name, listener);
-                }, (listener) => {
+                }, listener => {
                     // The API seems to throw when we try to unbind from a destroyed player and it doesn't
                     // expose whether the player has been destroyed so we have to wrap it in a try/catch to
                     // prevent the entire stream from erroring out.
