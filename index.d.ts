@@ -38,6 +38,7 @@ export declare class YouTubePlayer implements AfterViewInit, OnChanges, OnDestro
     private _ngZone;
     private readonly _nonce;
     private readonly _changeDetectorRef;
+    private readonly _elementRef;
     private _player;
     private _pendingPlayer;
     private _existingApiReadyCallback;
@@ -149,6 +150,11 @@ export declare class YouTubePlayer implements AfterViewInit, OnChanges, OnDestro
     getVideoUrl(): string;
     /** See https://developers.google.com/youtube/iframe_api_reference#getVideoEmbedCode */
     getVideoEmbedCode(): string;
+    /**
+     * Attempts to put the player into fullscreen mode, depending on browser support.
+     * @param options Options controlling how the element behaves in fullscreen mode.
+     */
+    requestFullscreen(options?: FullscreenOptions): Promise<void>;
     /**
      * Loads the YouTube API and sets up the player.
      * @param playVideo Whether to automatically play the video once the player is loaded.

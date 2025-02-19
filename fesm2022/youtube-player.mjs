@@ -1,5 +1,5 @@
 import * as i0 from '@angular/core';
-import { Component, ChangeDetectionStrategy, ViewEncapsulation, Input, InjectionToken, numberAttribute, inject, NgZone, CSP_NONCE, ChangeDetectorRef, EventEmitter, PLATFORM_ID, booleanAttribute, Output, ViewChild, NgModule } from '@angular/core';
+import { Component, ChangeDetectionStrategy, ViewEncapsulation, Input, InjectionToken, numberAttribute, inject, NgZone, CSP_NONCE, ChangeDetectorRef, ElementRef, EventEmitter, PLATFORM_ID, booleanAttribute, Output, ViewChild, NgModule } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { Subject, BehaviorSubject, fromEventPattern, of, Observable } from 'rxjs';
 import { switchMap, takeUntil } from 'rxjs/operators';
@@ -44,7 +44,7 @@ class YouTubePlayerPlaceholder {
         <path d="M 45,24 27,14 27,34" fill="#fff"></path>
       </svg>
     </button>
-  `, isInline: true, styles: [".youtube-player-placeholder{display:flex;align-items:center;justify-content:center;width:100%;overflow:hidden;cursor:pointer;background-color:#000;background-position:center center;background-size:cover;transition:box-shadow 300ms ease;box-shadow:inset 0 120px 90px -90px rgba(0,0,0,.8)}.youtube-player-placeholder-button{transition:opacity 300ms ease;-moz-appearance:none;-webkit-appearance:none;background:none;border:none;padding:0;display:flex}.youtube-player-placeholder-button svg{width:68px;height:48px}.youtube-player-placeholder-loading{box-shadow:none}.youtube-player-placeholder-loading .youtube-player-placeholder-button{opacity:0}"], changeDetection: i0.ChangeDetectionStrategy.OnPush, encapsulation: i0.ViewEncapsulation.None });
+  `, isInline: true, styles: [".youtube-player-placeholder{display:flex;align-items:center;justify-content:center;width:100%;overflow:hidden;cursor:pointer;background-color:#000;background-position:center center;background-size:cover;transition:box-shadow 300ms ease;box-shadow:inset 0 120px 90px -90px rgba(0,0,0,.8)}:fullscreen .youtube-player-placeholder{min-width:100vw;min-height:100vh}.youtube-player-placeholder-button{transition:opacity 300ms ease;-moz-appearance:none;-webkit-appearance:none;background:none;border:none;padding:0;display:flex}.youtube-player-placeholder-button svg{width:68px;height:48px}.youtube-player-placeholder-loading{box-shadow:none}.youtube-player-placeholder-loading .youtube-player-placeholder-button{opacity:0}"], changeDetection: i0.ChangeDetectionStrategy.OnPush, encapsulation: i0.ViewEncapsulation.None });
 }
 i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "19.1.3", ngImport: i0, type: YouTubePlayerPlaceholder, decorators: [{
             type: Component,
@@ -66,7 +66,7 @@ i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "19.1.3", ngImpor
                         '[style.background-image]': '_getBackgroundImage()',
                         '[style.width.px]': 'width',
                         '[style.height.px]': 'height',
-                    }, styles: [".youtube-player-placeholder{display:flex;align-items:center;justify-content:center;width:100%;overflow:hidden;cursor:pointer;background-color:#000;background-position:center center;background-size:cover;transition:box-shadow 300ms ease;box-shadow:inset 0 120px 90px -90px rgba(0,0,0,.8)}.youtube-player-placeholder-button{transition:opacity 300ms ease;-moz-appearance:none;-webkit-appearance:none;background:none;border:none;padding:0;display:flex}.youtube-player-placeholder-button svg{width:68px;height:48px}.youtube-player-placeholder-loading{box-shadow:none}.youtube-player-placeholder-loading .youtube-player-placeholder-button{opacity:0}"] }]
+                    }, styles: [".youtube-player-placeholder{display:flex;align-items:center;justify-content:center;width:100%;overflow:hidden;cursor:pointer;background-color:#000;background-position:center center;background-size:cover;transition:box-shadow 300ms ease;box-shadow:inset 0 120px 90px -90px rgba(0,0,0,.8)}:fullscreen .youtube-player-placeholder{min-width:100vw;min-height:100vh}.youtube-player-placeholder-button{transition:opacity 300ms ease;-moz-appearance:none;-webkit-appearance:none;background:none;border:none;padding:0;display:flex}.youtube-player-placeholder-button svg{width:68px;height:48px}.youtube-player-placeholder-loading{box-shadow:none}.youtube-player-placeholder-loading .youtube-player-placeholder-button{opacity:0}"] }]
         }], propDecorators: { videoId: [{
                 type: Input
             }], width: [{
@@ -112,6 +112,7 @@ class YouTubePlayer {
     _ngZone = inject(NgZone);
     _nonce = inject(CSP_NONCE, { optional: true });
     _changeDetectorRef = inject(ChangeDetectorRef);
+    _elementRef = inject(ElementRef);
     _player;
     _pendingPlayer;
     _existingApiReadyCallback;
@@ -383,6 +384,18 @@ class YouTubePlayer {
         return this._player ? this._player.getVideoEmbedCode() : '';
     }
     /**
+     * Attempts to put the player into fullscreen mode, depending on browser support.
+     * @param options Options controlling how the element behaves in fullscreen mode.
+     */
+    async requestFullscreen(options) {
+        // Note that we do this on the host, rather than the iframe, because it allows us to handle the
+        // placeholder in fullscreen mode. Null check the method since it's not supported everywhere.
+        const element = this._elementRef.nativeElement;
+        return element.requestFullscreen
+            ? element.requestFullscreen(options)
+            : Promise.reject(new Error('Fullscreen API not supported by browser.'));
+    }
+    /**
      * Loads the YouTube API and sets up the player.
      * @param playVideo Whether to automatically play the video once the player is loaded.
      */
@@ -604,16 +617,11 @@ class YouTubePlayer {
     <div [style.display]="_shouldShowPlaceholder() ? 'none' : ''">
       <div #youtubeContainer></div>
     </div>
-  `, isInline: true, dependencies: [{ kind: "component", type: YouTubePlayerPlaceholder, selector: "youtube-player-placeholder", inputs: ["videoId", "width", "height", "isLoading", "buttonLabel", "quality"] }], changeDetection: i0.ChangeDetectionStrategy.OnPush, encapsulation: i0.ViewEncapsulation.None });
+  `, isInline: true, styles: ["youtube-player:fullscreen,youtube-player:fullscreen iframe{min-width:100vw;min-height:100vh}"], dependencies: [{ kind: "component", type: YouTubePlayerPlaceholder, selector: "youtube-player-placeholder", inputs: ["videoId", "width", "height", "isLoading", "buttonLabel", "quality"] }], changeDetection: i0.ChangeDetectionStrategy.OnPush, encapsulation: i0.ViewEncapsulation.None });
 }
 i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "19.1.3", ngImport: i0, type: YouTubePlayer, decorators: [{
             type: Component,
-            args: [{
-                    selector: 'youtube-player',
-                    changeDetection: ChangeDetectionStrategy.OnPush,
-                    encapsulation: ViewEncapsulation.None,
-                    imports: [YouTubePlayerPlaceholder],
-                    template: `
+            args: [{ selector: 'youtube-player', changeDetection: ChangeDetectionStrategy.OnPush, encapsulation: ViewEncapsulation.None, imports: [YouTubePlayerPlaceholder], template: `
     @if (_shouldShowPlaceholder()) {
       <youtube-player-placeholder
         [videoId]="videoId!"
@@ -627,8 +635,7 @@ i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "19.1.3", ngImpor
     <div [style.display]="_shouldShowPlaceholder() ? 'none' : ''">
       <div #youtubeContainer></div>
     </div>
-  `,
-                }]
+  `, styles: ["youtube-player:fullscreen,youtube-player:fullscreen iframe{min-width:100vw;min-height:100vh}"] }]
         }], ctorParameters: () => [], propDecorators: { videoId: [{
                 type: Input
             }], height: [{
