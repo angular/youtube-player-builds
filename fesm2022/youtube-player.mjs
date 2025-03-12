@@ -1,5 +1,5 @@
 import * as i0 from '@angular/core';
-import { Component, ChangeDetectionStrategy, ViewEncapsulation, Input, InjectionToken, numberAttribute, inject, NgZone, CSP_NONCE, ChangeDetectorRef, ElementRef, EventEmitter, PLATFORM_ID, booleanAttribute, Output, ViewChild, NgModule } from '@angular/core';
+import { Component, ChangeDetectionStrategy, ViewEncapsulation, Input, InjectionToken, inject, NgZone, CSP_NONCE, ChangeDetectorRef, ElementRef, EventEmitter, PLATFORM_ID, numberAttribute, booleanAttribute, Output, ViewChild, NgModule } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { Subject, BehaviorSubject, fromEventPattern, of, Observable } from 'rxjs';
 import { switchMap, takeUntil } from 'rxjs/operators';
@@ -730,10 +730,6 @@ i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "19.2.0", ngImpor
                     exports: [YouTubePlayer],
                 }]
         }] });
-
-/**
- * Generated bundle index. Do not edit.
- */
 
 export { YOUTUBE_PLAYER_CONFIG, YouTubePlayer, YouTubePlayerModule };
 //# sourceMappingURL=youtube-player.mjs.map
