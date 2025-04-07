@@ -207,4 +207,5 @@ declare class YouTubePlayerModule {
     static ɵinj: i0.ɵɵInjectorDeclaration<YouTubePlayerModule>;
 }
 
-export { type PlaceholderImageQuality, YOUTUBE_PLAYER_CONFIG, YouTubePlayer, type YouTubePlayerConfig, YouTubePlayerModule };
+export { YOUTUBE_PLAYER_CONFIG, YouTubePlayer, YouTubePlayerModule };
+export type { PlaceholderImageQuality, YouTubePlayerConfig };
