@@ -1,5 +1,5 @@
 import * as i0 from '@angular/core';
-import { Component, ChangeDetectionStrategy, ViewEncapsulation, Input, InjectionToken, inject, NgZone, CSP_NONCE, ChangeDetectorRef, ElementRef, EventEmitter, PLATFORM_ID, numberAttribute, booleanAttribute, Output, ViewChild, NgModule } from '@angular/core';
+import { Input, ViewEncapsulation, ChangeDetectionStrategy, Component, InjectionToken, inject, NgZone, CSP_NONCE, ChangeDetectorRef, ElementRef, EventEmitter, PLATFORM_ID, booleanAttribute, numberAttribute, ViewChild, Output, NgModule } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { trustedResourceUrl } from 'safevalues';
 import { setScriptSrc } from 'safevalues/dom';
@@ -84,6 +84,7 @@ i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "20.0.0-next.5", 
             }] } });
 
 // Workaround for: https://github.com/bazelbuild/rules_nodejs/issues/1265
+/// <reference types="youtube" preserve="true" />
 /** Injection token used to configure the `YouTubePlayer`. */
 const YOUTUBE_PLAYER_CONFIG = new InjectionToken('YOUTUBE_PLAYER_CONFIG');
 const DEFAULT_PLAYER_WIDTH = 640;
