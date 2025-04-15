@@ -1,6 +1,6 @@
 /// <reference types="youtube" />
 import * as i0 from '@angular/core';
-import { InjectionToken, AfterViewInit, OnChanges, OnDestroy, ElementRef, SimpleChanges } from '@angular/core';
+import { AfterViewInit, OnChanges, OnDestroy, ElementRef, SimpleChanges, InjectionToken } from '@angular/core';
 import { Observable } from 'rxjs';
 
 /**  Quality of the placeholder image.  */
@@ -207,4 +207,5 @@ declare class YouTubePlayerModule {
     static ɵinj: i0.ɵɵInjectorDeclaration<YouTubePlayerModule>;
 }
 
-export { type PlaceholderImageQuality, YOUTUBE_PLAYER_CONFIG, YouTubePlayer, type YouTubePlayerConfig, YouTubePlayerModule };
+export { YOUTUBE_PLAYER_CONFIG, YouTubePlayer, YouTubePlayerModule };
+export type { PlaceholderImageQuality, YouTubePlayerConfig };
