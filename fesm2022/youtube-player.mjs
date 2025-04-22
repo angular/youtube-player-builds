@@ -1,5 +1,5 @@
 import * as i0 from '@angular/core';
-import { Component, ChangeDetectionStrategy, ViewEncapsulation, Input, InjectionToken, inject, NgZone, CSP_NONCE, ChangeDetectorRef, ElementRef, EventEmitter, PLATFORM_ID, numberAttribute, booleanAttribute, Output, ViewChild, NgModule } from '@angular/core';
+import { Input, ViewEncapsulation, ChangeDetectionStrategy, Component, InjectionToken, inject, NgZone, CSP_NONCE, ChangeDetectorRef, ElementRef, EventEmitter, PLATFORM_ID, booleanAttribute, numberAttribute, ViewChild, Output, NgModule } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { Subject, BehaviorSubject, fromEventPattern, of, Observable } from 'rxjs';
 import { switchMap, takeUntil } from 'rxjs/operators';
