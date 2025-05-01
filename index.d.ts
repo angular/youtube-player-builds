@@ -1,40 +1,43 @@
 /// <reference types="youtube" />
-
-import { AfterViewInit } from '@angular/core';
-import { ElementRef } from '@angular/core';
 import * as i0 from '@angular/core';
-import { InjectionToken } from '@angular/core';
+import { InjectionToken, AfterViewInit, OnChanges, OnDestroy, ElementRef, SimpleChanges } from '@angular/core';
 import { Observable } from 'rxjs';
-import { OnChanges } from '@angular/core';
-import { OnDestroy } from '@angular/core';
-import { SimpleChanges } from '@angular/core';
-
-declare const DEFAULT_PLAYER_HEIGHT = 390;
-
-declare const DEFAULT_PLAYER_WIDTH = 640;
-
-declare namespace i1 {
-    export {
-        YOUTUBE_PLAYER_CONFIG,
-        YouTubePlayerConfig,
-        DEFAULT_PLAYER_WIDTH,
-        DEFAULT_PLAYER_HEIGHT,
-        YouTubePlayer
-    }
-}
 
 /**  Quality of the placeholder image.  */
-export declare type PlaceholderImageQuality = 'high' | 'standard' | 'low';
+type PlaceholderImageQuality = 'high' | 'standard' | 'low';
 
+declare global {
+    interface Window {
+        YT: typeof YT | undefined;
+        onYouTubeIframeAPIReady: (() => void) | undefined;
+    }
+}
 /** Injection token used to configure the `YouTubePlayer`. */
-export declare const YOUTUBE_PLAYER_CONFIG: InjectionToken<YouTubePlayerConfig>;
-
+declare const YOUTUBE_PLAYER_CONFIG: InjectionToken<YouTubePlayerConfig>;
+/** Object that can be used to configure the `YouTubePlayer`. */
+interface YouTubePlayerConfig {
+    /** Whether to load the YouTube iframe API automatically. Defaults to `true`. */
+    loadApi?: boolean;
+    /**
+     * By default the player shows a placeholder image instead of loading the YouTube API which
+     * improves the initial page load performance. Use this option to disable the placeholder loading
+     * behavior globally. Defaults to `false`.
+     */
+    disablePlaceholder?: boolean;
+    /** Accessible label for the play button inside of the placeholder. */
+    placeholderButtonLabel?: string;
+    /**
+     * Quality of the displayed placeholder image. Defaults to `standard`,
+     * because not all video have a high-quality placeholder.
+     */
+    placeholderImageQuality?: PlaceholderImageQuality;
+}
 /**
  * Angular component that renders a YouTube player via the YouTube player
  * iframe API.
  * @see https://developers.google.com/youtube/iframe_api_reference
  */
-export declare class YouTubePlayer implements AfterViewInit, OnChanges, OnDestroy {
+declare class YouTubePlayer implements AfterViewInit, OnChanges, OnDestroy {
     private _ngZone;
     private readonly _nonce;
     private readonly _changeDetectorRef;
@@ -198,29 +201,11 @@ export declare class YouTubePlayer implements AfterViewInit, OnChanges, OnDestro
     static ngAcceptInputType_showBeforeIframeApiLoads: unknown;
 }
 
-/** Object that can be used to configure the `YouTubePlayer`. */
-export declare interface YouTubePlayerConfig {
-    /** Whether to load the YouTube iframe API automatically. Defaults to `true`. */
-    loadApi?: boolean;
-    /**
-     * By default the player shows a placeholder image instead of loading the YouTube API which
-     * improves the initial page load performance. Use this option to disable the placeholder loading
-     * behavior globally. Defaults to `false`.
-     */
-    disablePlaceholder?: boolean;
-    /** Accessible label for the play button inside of the placeholder. */
-    placeholderButtonLabel?: string;
-    /**
-     * Quality of the displayed placeholder image. Defaults to `standard`,
-     * because not all video have a high-quality placeholder.
-     */
-    placeholderImageQuality?: PlaceholderImageQuality;
-}
-
-export declare class YouTubePlayerModule {
+declare class YouTubePlayerModule {
     static ɵfac: i0.ɵɵFactoryDeclaration<YouTubePlayerModule, never>;
-    static ɵmod: i0.ɵɵNgModuleDeclaration<YouTubePlayerModule, never, [typeof i1.YouTubePlayer], [typeof i1.YouTubePlayer]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<YouTubePlayerModule, never, [typeof YouTubePlayer], [typeof YouTubePlayer]>;
     static ɵinj: i0.ɵɵInjectorDeclaration<YouTubePlayerModule>;
 }
 
-export { }
+export { YOUTUBE_PLAYER_CONFIG, YouTubePlayer, YouTubePlayerModule };
+export type { PlaceholderImageQuality, YouTubePlayerConfig };
