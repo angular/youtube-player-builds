@@ -30,14 +30,14 @@
   "schematics": "./schematics/collection.json",
   "ng-update": {},
   "module": "./fesm2022/youtube-player.mjs",
-  "typings": "./index.d.ts",
+  "typings": "./types/youtube-player.d.ts",
   "type": "module",
   "exports": {
     "./package.json": {
       "default": "./package.json"
     },
     ".": {
-      "types": "./index.d.ts",
+      "types": "./types/youtube-player.d.ts",
       "default": "./fesm2022/youtube-player.mjs"
     }
   }
