@@ -10,7 +10,7 @@ class YouTubePlayerPlaceholder {
   videoId;
   width;
   height;
-  isLoading;
+  isLoading = false;
   buttonLabel;
   quality;
   _getBackgroundImage() {
