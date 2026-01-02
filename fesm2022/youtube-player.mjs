@@ -449,7 +449,7 @@ class YouTubePlayer {
         const state = player.getPlayerState();
         if (state === PlayerState.UNSTARTED || state === PlayerState.CUED || state == null) {
           this._cuePlayer();
-        } else if (playVideo && this.startSeconds && this.startSeconds > 0) {
+        } else if ((playVideo || this.playerVars?.autoplay === 1) && this.startSeconds && this.startSeconds > 0) {
           player.seekTo(this.startSeconds, true);
         }
         this._changeDetectorRef.markForCheck();
