@@ -111,7 +111,7 @@ declare class YouTubePlayer implements AfterViewInit, OnChanges, OnDestroy {
     youtubeContainer: ElementRef<HTMLElement>;
     constructor(...args: unknown[]);
     ngAfterViewInit(): void;
-    ngOnChanges(changes: SimpleChanges): void;
+    ngOnChanges(changes: SimpleChanges<this>): void;
     ngOnDestroy(): void;
     /** See https://developers.google.com/youtube/iframe_api_reference#playVideo */
     playVideo(): void;
