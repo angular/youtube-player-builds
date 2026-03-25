@@ -6,12 +6,6 @@ import { Observable } from 'rxjs';
 /**  Quality of the placeholder image.  */
 type PlaceholderImageQuality = 'high' | 'standard' | 'low';
 
-declare global {
-    interface Window {
-        YT: typeof YT | undefined;
-        onYouTubeIframeAPIReady: (() => void) | undefined;
-    }
-}
 /** Injection token used to configure the `YouTubePlayer`. */
 declare const YOUTUBE_PLAYER_CONFIG: InjectionToken<YouTubePlayerConfig>;
 /** Object that can be used to configure the `YouTubePlayer`. */
