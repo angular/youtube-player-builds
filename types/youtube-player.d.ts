@@ -103,7 +103,7 @@ declare class YouTubePlayer implements AfterViewInit, OnChanges, OnDestroy {
     readonly playbackRateChange: Observable<YT.OnPlaybackRateChangeEvent>;
     /** The element that will be replaced by the iframe. */
     youtubeContainer: ElementRef<HTMLElement>;
-    constructor(...args: unknown[]);
+    constructor();
     ngAfterViewInit(): void;
     ngOnChanges(changes: SimpleChanges<this>): void;
     ngOnDestroy(): void;
