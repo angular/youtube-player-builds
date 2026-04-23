@@ -415,7 +415,7 @@ class YouTubePlayer {
   _createPlayer(playVideo) {
     this._player?.destroy();
     this._pendingPlayer?.destroy();
-    if (typeof YT === 'undefined' || !this.videoId && !this.playerVars?.list) {
+    if (typeof window.YT === 'undefined' || !this.videoId && !this.playerVars?.list) {
       return;
     }
     const params = {
@@ -430,7 +430,7 @@ class YouTubePlayer {
     if (this.videoId) {
       params.videoId = this.videoId;
     }
-    const player = this._ngZone.runOutsideAngular(() => new YT.Player(this.youtubeContainer.nativeElement, params));
+    const player = this._ngZone.runOutsideAngular(() => new window.YT.Player(this.youtubeContainer.nativeElement, params));
     const whenReady = event => {
       this._ngZone.run(() => {
         this._isLoading = false;

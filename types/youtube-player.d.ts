@@ -1,6 +1,7 @@
 /// <reference types="youtube" />
 import * as i0 from '@angular/core';
 import { InjectionToken, AfterViewInit, OnChanges, OnDestroy, ElementRef, SimpleChanges } from '@angular/core';
+import * as YT from 'youtube';
 import { Observable } from 'rxjs';
 
 /**  Quality of the placeholder image.  */

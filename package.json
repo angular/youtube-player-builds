@@ -1,6 +1,6 @@
 {
   "name": "@angular/youtube-player",
-  "version": "22.0.0-next.6+sha-05419c5",
+  "version": "22.0.0-next.6+sha-b673887",
   "description": "Angular YouTube Player",
   "repository": {
     "type": "git",
@@ -17,7 +17,7 @@
   },
   "homepage": "https://github.com/angular/components/tree/main/src/youtube-player#readme",
   "dependencies": {
-    "@types/youtube": "0.1.2",
+    "@types/youtube": "0.2.0",
     "tslib": "^2.3.0",
     "safevalues": "^1.2.0"
   },
