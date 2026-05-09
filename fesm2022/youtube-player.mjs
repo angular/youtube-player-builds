@@ -1,5 +1,5 @@
 import * as i0 from '@angular/core';
-import { Input, ViewEncapsulation, ChangeDetectionStrategy, Component, InjectionToken, inject, NgZone, CSP_NONCE, ChangeDetectorRef, ElementRef, EventEmitter, PLATFORM_ID, booleanAttribute, numberAttribute, ViewChild, Output, NgModule } from '@angular/core';
+import { Input, ViewEncapsulation, Component, InjectionToken, inject, NgZone, CSP_NONCE, ChangeDetectorRef, ElementRef, EventEmitter, PLATFORM_ID, booleanAttribute, numberAttribute, ViewChild, Output, NgModule } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { trustedResourceUrl } from 'safevalues';
 import { setScriptSrc } from 'safevalues/dom';
@@ -71,7 +71,6 @@ class YouTubePlayerPlaceholder {
   `,
     isInline: true,
     styles: [".youtube-player-placeholder {\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  width: 100%;\n  overflow: hidden;\n  cursor: pointer;\n  background-color: #000;\n  background-position: center center;\n  background-size: cover;\n  transition: box-shadow 300ms ease;\n  box-shadow: inset 0 120px 90px -90px rgba(0, 0, 0, 0.8);\n}\n:fullscreen .youtube-player-placeholder {\n  min-width: 100vw;\n  min-height: 100vh;\n}\n\n.youtube-player-placeholder-button {\n  transition: opacity 300ms ease;\n  -moz-appearance: none;\n  -webkit-appearance: none;\n  background: none;\n  border: none;\n  padding: 0;\n  display: flex;\n}\n.youtube-player-placeholder-button svg {\n  width: 68px;\n  height: 48px;\n}\n\n.youtube-player-placeholder-loading {\n  box-shadow: none;\n}\n.youtube-player-placeholder-loading .youtube-player-placeholder-button {\n  opacity: 0;\n}\n"],
-    changeDetection: i0.ChangeDetectionStrategy.OnPush,
     encapsulation: i0.ViewEncapsulation.None
   });
 }
@@ -84,7 +83,6 @@ i0.ɵɵngDeclareClassMetadata({
     type: Component,
     args: [{
       selector: 'youtube-player-placeholder',
-      changeDetection: ChangeDetectionStrategy.OnPush,
       encapsulation: ViewEncapsulation.None,
       template: `
     <button type="button" class="youtube-player-placeholder-button" [attr.aria-label]="buttonLabel">
@@ -592,7 +590,6 @@ class YouTubePlayer {
       selector: "youtube-player-placeholder",
       inputs: ["videoId", "width", "height", "isLoading", "buttonLabel", "quality"]
     }],
-    changeDetection: i0.ChangeDetectionStrategy.OnPush,
     encapsulation: i0.ViewEncapsulation.None
   });
 }
@@ -605,7 +602,6 @@ i0.ɵɵngDeclareClassMetadata({
     type: Component,
     args: [{
       selector: 'youtube-player',
-      changeDetection: ChangeDetectionStrategy.OnPush,
       encapsulation: ViewEncapsulation.None,
       imports: [YouTubePlayerPlaceholder],
       template: `
