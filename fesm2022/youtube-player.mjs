@@ -1,29 +1,52 @@
 import * as i0 from '@angular/core';
-import { Input, ViewEncapsulation, Component, InjectionToken, inject, NgZone, CSP_NONCE, ChangeDetectorRef, ElementRef, EventEmitter, PLATFORM_ID, booleanAttribute, numberAttribute, ViewChild, Output, NgModule } from '@angular/core';
+import { input, computed, ViewEncapsulation, Component, InjectionToken, inject, NgZone, CSP_NONCE, ChangeDetectorRef, ElementRef, EventEmitter, PLATFORM_ID, booleanAttribute, numberAttribute, ViewChild, Output, Input, NgModule } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { trustedResourceUrl } from 'safevalues';
 import { setScriptSrc } from 'safevalues/dom';
 import { Subject, BehaviorSubject, fromEventPattern, of, Observable } from 'rxjs';
 import { switchMap, takeUntil } from 'rxjs/operators';
 
+const VIDEO_ID_REGEX = /^[a-zA-Z0-9_-]+$/;
 class YouTubePlayerPlaceholder {
-  videoId;
-  width;
-  height;
-  isLoading = false;
-  buttonLabel;
-  quality;
-  _getBackgroundImage() {
+  videoId = input.required(...(ngDevMode ? [{
+    debugName: "videoId"
+  }] : []));
+  width = input.required(...(ngDevMode ? [{
+    debugName: "width"
+  }] : []));
+  height = input.required(...(ngDevMode ? [{
+    debugName: "height"
+  }] : []));
+  isLoading = input.required(...(ngDevMode ? [{
+    debugName: "isLoading"
+  }] : []));
+  buttonLabel = input.required(...(ngDevMode ? [{
+    debugName: "buttonLabel"
+  }] : []));
+  quality = input.required(...(ngDevMode ? [{
+    debugName: "quality"
+  }] : []));
+  _backgroundImage = computed(() => {
+    const quality = this.quality();
+    const videoId = this.videoId();
+    if (!VIDEO_ID_REGEX.test(videoId)) {
+      if (typeof ngDevMode === 'undefined' || ngDevMode) {
+        console.error(`Skipping placeholder image generation for invalid YouTube video ID: ${videoId}`);
+      }
+      return null;
+    }
     let url;
-    if (this.quality === 'low') {
-      url = `https://i.ytimg.com/vi/${this.videoId}/hqdefault.jpg`;
-    } else if (this.quality === 'high') {
-      url = `https://i.ytimg.com/vi/${this.videoId}/maxresdefault.jpg`;
+    if (quality === 'low') {
+      url = `https://i.ytimg.com/vi/${videoId}/hqdefault.jpg`;
+    } else if (quality === 'high') {
+      url = `https://i.ytimg.com/vi/${videoId}/maxresdefault.jpg`;
     } else {
-      url = `https://i.ytimg.com/vi_webp/${this.videoId}/sddefault.webp`;
+      url = `https://i.ytimg.com/vi_webp/${videoId}/sddefault.webp`;
     }
     return `url(${url})`;
-  }
+  }, ...(ngDevMode ? [{
+    debugName: "_backgroundImage"
+  }] : []));
   static ɵfac = i0.ɵɵngDeclareFactory({
     minVersion: "12.0.0",
     version: "22.0.0-rc.2",
@@ -33,31 +56,67 @@ class YouTubePlayerPlaceholder {
     target: i0.ɵɵFactoryTarget.Component
   });
   static ɵcmp = i0.ɵɵngDeclareComponent({
-    minVersion: "14.0.0",
+    minVersion: "17.1.0",
     version: "22.0.0-rc.2",
     type: YouTubePlayerPlaceholder,
     isStandalone: true,
     selector: "youtube-player-placeholder",
     inputs: {
-      videoId: "videoId",
-      width: "width",
-      height: "height",
-      isLoading: "isLoading",
-      buttonLabel: "buttonLabel",
-      quality: "quality"
+      videoId: {
+        classPropertyName: "videoId",
+        publicName: "videoId",
+        isSignal: true,
+        isRequired: true,
+        transformFunction: null
+      },
+      width: {
+        classPropertyName: "width",
+        publicName: "width",
+        isSignal: true,
+        isRequired: true,
+        transformFunction: null
+      },
+      height: {
+        classPropertyName: "height",
+        publicName: "height",
+        isSignal: true,
+        isRequired: true,
+        transformFunction: null
+      },
+      isLoading: {
+        classPropertyName: "isLoading",
+        publicName: "isLoading",
+        isSignal: true,
+        isRequired: true,
+        transformFunction: null
+      },
+      buttonLabel: {
+        classPropertyName: "buttonLabel",
+        publicName: "buttonLabel",
+        isSignal: true,
+        isRequired: true,
+        transformFunction: null
+      },
+      quality: {
+        classPropertyName: "quality",
+        publicName: "quality",
+        isSignal: true,
+        isRequired: true,
+        transformFunction: null
+      }
     },
     host: {
       properties: {
-        "class.youtube-player-placeholder-loading": "isLoading",
-        "style.background-image": "_getBackgroundImage()",
-        "style.width.px": "width",
-        "style.height.px": "height"
+        "class.youtube-player-placeholder-loading": "isLoading()",
+        "style.background-image": "_backgroundImage()",
+        "style.width.px": "width()",
+        "style.height.px": "height()"
       },
       classAttribute: "youtube-player-placeholder"
     },
     ngImport: i0,
     template: `
-    <button type="button" class="youtube-player-placeholder-button" [attr.aria-label]="buttonLabel">
+    <button type="button" class="youtube-player-placeholder-button" [attr.aria-label]="buttonLabel()">
       <svg
         height="100%"
         version="1.1"
@@ -85,7 +144,7 @@ i0.ɵɵngDeclareClassMetadata({
       selector: 'youtube-player-placeholder',
       encapsulation: ViewEncapsulation.None,
       template: `
-    <button type="button" class="youtube-player-placeholder-button" [attr.aria-label]="buttonLabel">
+    <button type="button" class="youtube-player-placeholder-button" [attr.aria-label]="buttonLabel()">
       <svg
         height="100%"
         version="1.1"
@@ -99,32 +158,62 @@ i0.ɵɵngDeclareClassMetadata({
   `,
       host: {
         'class': 'youtube-player-placeholder',
-        '[class.youtube-player-placeholder-loading]': 'isLoading',
-        '[style.background-image]': '_getBackgroundImage()',
-        '[style.width.px]': 'width',
-        '[style.height.px]': 'height'
+        '[class.youtube-player-placeholder-loading]': 'isLoading()',
+        '[style.background-image]': '_backgroundImage()',
+        '[style.width.px]': 'width()',
+        '[style.height.px]': 'height()'
       },
       styles: [".youtube-player-placeholder {\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  width: 100%;\n  overflow: hidden;\n  cursor: pointer;\n  background-color: #000;\n  background-position: center center;\n  background-size: cover;\n  transition: box-shadow 300ms ease;\n  box-shadow: inset 0 120px 90px -90px rgba(0, 0, 0, 0.8);\n}\n:fullscreen .youtube-player-placeholder {\n  min-width: 100vw;\n  min-height: 100vh;\n}\n\n.youtube-player-placeholder-button {\n  transition: opacity 300ms ease;\n  -moz-appearance: none;\n  -webkit-appearance: none;\n  background: none;\n  border: none;\n  padding: 0;\n  display: flex;\n}\n.youtube-player-placeholder-button svg {\n  width: 68px;\n  height: 48px;\n}\n\n.youtube-player-placeholder-loading {\n  box-shadow: none;\n}\n.youtube-player-placeholder-loading .youtube-player-placeholder-button {\n  opacity: 0;\n}\n"]
     }]
   }],
   propDecorators: {
     videoId: [{
-      type: Input
+      type: i0.Input,
+      args: [{
+        isSignal: true,
+        alias: "videoId",
+        required: true
+      }]
     }],
     width: [{
-      type: Input
+      type: i0.Input,
+      args: [{
+        isSignal: true,
+        alias: "width",
+        required: true
+      }]
     }],
     height: [{
-      type: Input
+      type: i0.Input,
+      args: [{
+        isSignal: true,
+        alias: "height",
+        required: true
+      }]
     }],
     isLoading: [{
-      type: Input
+      type: i0.Input,
+      args: [{
+        isSignal: true,
+        alias: "isLoading",
+        required: true
+      }]
     }],
     buttonLabel: [{
-      type: Input
+      type: i0.Input,
+      args: [{
+        isSignal: true,
+        alias: "buttonLabel",
+        required: true
+      }]
     }],
     quality: [{
-      type: Input
+      type: i0.Input,
+      args: [{
+        isSignal: true,
+        alias: "quality",
+        required: true
+      }]
     }]
   }
 });
@@ -368,14 +457,17 @@ class YouTubePlayer {
     if (!this._isBrowser) {
       return;
     }
-    if (!window.YT || !window.YT.Player) {
+    if (typeof window.YT !== 'object' || !window.YT || !window.YT.Player || typeof window.YT.Player !== 'function') {
       if (this.loadApi) {
         this._isLoading = true;
         loadApi(this._nonce);
       } else if (this.showBeforeIframeApiLoads && (typeof ngDevMode === 'undefined' || ngDevMode)) {
         throw new Error('Namespace YT not found, cannot construct embedded youtube player. ' + 'Please install the YouTube Player API Reference for iframe Embeds: ' + 'https://developers.google.com/youtube/iframe_api_reference');
       }
-      this._existingApiReadyCallback = window.onYouTubeIframeAPIReady;
+      const existingCallback = window.onYouTubeIframeAPIReady;
+      if (typeof existingCallback === 'function') {
+        this._existingApiReadyCallback = window.onYouTubeIframeAPIReady;
+      }
       window.onYouTubeIframeAPIReady = () => {
         this._existingApiReadyCallback?.();
         this._ngZone.run(() => this._createPlayer(playVideo));
