@@ -49,7 +49,7 @@ class YouTubePlayerPlaceholder {
   }] : []));
   static ɵfac = i0.ɵɵngDeclareFactory({
     minVersion: "12.0.0",
-    version: "22.1.0-next.5",
+    version: "22.1.0-next.6",
     ngImport: i0,
     type: YouTubePlayerPlaceholder,
     deps: [],
@@ -57,7 +57,7 @@ class YouTubePlayerPlaceholder {
   });
   static ɵcmp = i0.ɵɵngDeclareComponent({
     minVersion: "17.1.0",
-    version: "22.1.0-next.5",
+    version: "22.1.0-next.6",
     type: YouTubePlayerPlaceholder,
     isStandalone: true,
     selector: "youtube-player-placeholder",
@@ -135,7 +135,7 @@ class YouTubePlayerPlaceholder {
 }
 i0.ɵɵngDeclareClassMetadata({
   minVersion: "12.0.0",
-  version: "22.1.0-next.5",
+  version: "22.1.0-next.6",
   ngImport: i0,
   type: YouTubePlayerPlaceholder,
   decorators: [{
@@ -615,7 +615,7 @@ class YouTubePlayer {
   }
   static ɵfac = i0.ɵɵngDeclareFactory({
     minVersion: "12.0.0",
-    version: "22.1.0-next.5",
+    version: "22.1.0-next.6",
     ngImport: i0,
     type: YouTubePlayer,
     deps: [],
@@ -623,7 +623,7 @@ class YouTubePlayer {
   });
   static ɵcmp = i0.ɵɵngDeclareComponent({
     minVersion: "17.0.0",
-    version: "22.1.0-next.5",
+    version: "22.1.0-next.6",
     type: YouTubePlayer,
     isStandalone: true,
     selector: "youtube-player",
@@ -687,7 +687,7 @@ class YouTubePlayer {
 }
 i0.ɵɵngDeclareClassMetadata({
   minVersion: "12.0.0",
-  version: "22.1.0-next.5",
+  version: "22.1.0-next.6",
   ngImport: i0,
   type: YouTubePlayer,
   decorators: [{
@@ -836,7 +836,7 @@ function loadApi(nonce) {
 class YouTubePlayerModule {
   static ɵfac = i0.ɵɵngDeclareFactory({
     minVersion: "12.0.0",
-    version: "22.1.0-next.5",
+    version: "22.1.0-next.6",
     ngImport: i0,
     type: YouTubePlayerModule,
     deps: [],
@@ -844,7 +844,7 @@ class YouTubePlayerModule {
   });
   static ɵmod = i0.ɵɵngDeclareNgModule({
     minVersion: "14.0.0",
-    version: "22.1.0-next.5",
+    version: "22.1.0-next.6",
     ngImport: i0,
     type: YouTubePlayerModule,
     imports: [YouTubePlayer],
@@ -852,14 +852,14 @@ class YouTubePlayerModule {
   });
   static ɵinj = i0.ɵɵngDeclareInjector({
     minVersion: "12.0.0",
-    version: "22.1.0-next.5",
+    version: "22.1.0-next.6",
     ngImport: i0,
     type: YouTubePlayerModule
   });
 }
 i0.ɵɵngDeclareClassMetadata({
   minVersion: "12.0.0",
-  version: "22.1.0-next.5",
+  version: "22.1.0-next.6",
   ngImport: i0,
   type: YouTubePlayerModule,
   decorators: [{
